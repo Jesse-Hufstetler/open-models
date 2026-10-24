@@ -255,8 +255,6 @@ async function main() {
         epoch_gpqa: r1(ep.gpqa[en]),
         epoch_swe: r1(ep.swe[en]),
         context: o ? o.context_length : null,
-        price_in: o ? Number(o.pricing.prompt) * 1e6 : null,
-        price_out: o ? Number(o.pricing.completion) * 1e6 : null,
       });
     }
   });

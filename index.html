@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Open Models</title>
 <style>
-  :root { --bg:#fff; --fg:#111; --mute:#6b7280; --grid:#d4d4d8; --head:#ececee; --gutter:#f4f4f5; --accent:#2563eb; --size:234,88,12; --pop:37,99,235; --new:22,163,74; --cost:147,51,234; --score:13,148,136; }
+  :root { --bg:#fff; --fg:#111; --mute:#6b7280; --grid:#d4d4d8; --head:#ececee; --gutter:#f4f4f5; --accent:#2563eb; --size:234,88,12; --pop:37,99,235; --new:22,163,74; --cost:147,51,234; --score:13,148,136; --warn:217,119,6; }
   @media (prefers-color-scheme: dark) {
-    :root { --bg:#16181c; --fg:#e6e6e6; --mute:#9aa0a6; --grid:#33373d; --head:#23262b; --gutter:#1d2025; --accent:#6ea8fe; --size:251,146,60; --pop:96,165,250; --new:74,222,128; --cost:192,132,252; --score:45,212,191; }
+    :root { --bg:#16181c; --fg:#e6e6e6; --mute:#9aa0a6; --grid:#33373d; --head:#23262b; --gutter:#1d2025; --accent:#6ea8fe; --size:251,146,60; --pop:96,165,250; --new:74,222,128; --cost:192,132,252; --score:45,212,191; --warn:251,191,36; }
   }
   * { box-sizing:border-box; }
   html, body { height:100%; margin:0; }
@@ -42,6 +42,7 @@ const num = (d) => v => v == null ? '' : v.toFixed(d);
 const clamp01 = t => Math.min(1, Math.max(0, t));
 const log = (lo, hi) => v => clamp01((Math.log(v) - Math.log(lo)) / (Math.log(hi) - Math.log(lo)));
 const NOW = Date.now();
+const PERMISSIVE = /^(apache-2\.0|mit)$/i;
 const SCORE_KEYS = ['aa_intel', 'aa_coding', 'aa_agentic', 'epoch_eci', 'epoch_gpqa', 'epoch_swe'];
 const hasScore = m => SCORE_KEYS.some(k => m[k] != null);
 const cutoff = (() => { const d = new Date(NOW); d.setMonth(d.getMonth() - 16); return d.toISOString().slice(0, 10); })();
@@ -64,11 +65,9 @@ const COLS = [
   { k:'q8',        label:'Q8 GB',      n:1, hue:'size', scale:log(0.1, 1000), fmt:num(1), tip:'weights only, 1 byte/param' },
   { k:'q4',        label:'Q4 GB',      n:1, hue:'size', scale:log(0.1, 1000), fmt:num(1), tip:'weights only, ~0.57 bytes/param' },
   { k:'context',   label:'Context',    n:1, hue:'size', scale:log(4096, 1048576), fmt:v => v == null ? '' : (v >= 1024 ? Math.round(v / 1024) + 'K' : v) },
-  { k:'price_in',  label:'$/M in',     n:1, hue:'cost', scale:log(0.05, 20), fmt:num(2) },
-  { k:'price_out', label:'$/M out',    n:1, hue:'cost', scale:log(0.05, 20), fmt:num(2) },
   { k:'downloads', label:'Downloads',  n:1, hue:'pop', scale:log(1e3, 3e7), fmt:v => v.toLocaleString() },
   { k:'likes',     label:'Likes',      n:1, hue:'pop', scale:log(10, 5000), fmt:v => v.toLocaleString() },
-  { k:'license',   label:'License' },
+  { k:'license',   label:'License',    hue:'warn', scale:v => PERMISSIVE.test(v) ? 0 : 0.7, fmt:v => v == null || PERMISSIVE.test(v) ? '' : v, tip:'Blank = Apache-2.0 or MIT. Anything shown has conditions (Llama, Gemma, non-commercial, etc.)' },
   { k:'created',   label:'Created',    hue:'new', scale:recent },
   { k:'updated',   label:'Updated',    hue:'new', scale:recent },
 ];
