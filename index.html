@@ -23,6 +23,7 @@
   td.link a { display:block; padding:1px 5px; color:inherit; text-decoration:none; }
   td.link:hover { box-shadow:inset 0 0 0 100px rgba(0,0,0,.10); }
   @media (prefers-color-scheme: dark) { td.link:hover { box-shadow:inset 0 0 0 100px rgba(255,255,255,.14); } }
+  #tip { position:fixed; z-index:10; max-width:340px; padding:6px 8px; background:#111; color:#eee; border:1px solid #555; border-radius:3px; font-size:12px; line-height:1.3; white-space:pre-line; pointer-events:none; box-shadow:0 3px 10px rgba(0,0,0,.4); display:none; }
   .mute { color:var(--mute); }
   .status { padding:2px 8px; background:var(--head); border-top:1px solid var(--grid); color:var(--mute); font-size:11px; display:flex; flex-wrap:wrap; gap:0 14px; align-items:center; }
   .status label { color:var(--fg); cursor:pointer; white-space:nowrap; }
@@ -31,6 +32,7 @@
 </head>
 <body>
 <div class="wrap"><table><thead><tr id="head"></tr></thead><tbody id="body"></tbody></table></div>
+<div id="tip"></div>
 <div class="status">
   <label><input type="checkbox" id="f-scored" checked>Hide models with no scores</label>
   <label><input type="checkbox" id="f-recent" checked>Hide models older than 16 months</label>
@@ -47,27 +49,27 @@ const hasScore = m => SCORE_KEYS.some(k => m[k] != null);
 const cutoff = (() => { const d = new Date(NOW); d.setMonth(d.getMonth() - 16); return d.toISOString().slice(0, 10); })();
 const recent = v => clamp01(1 - (NOW - Date.parse(v)) / (365 * 864e5)); // today = 1, a year ago = 0
 const COLS = [
-  { k:'country',   label:'Country' },
-  { k:'org',       label:'Org' },
-  { k:'product',   label:'Product' },
-  { k:'version',   label:'Ver', hue:'new', scale:(v, m) => m.ver_t, tip:'newest version of its product line = strongest' },
-  { k:'variant',   label:'Variant' },
-  { k:'aa_intel',  label:'Intel',      n:1, hue:'score', scale:v => clamp01((v - 5) / 60), fmt:num(0), tip:'Artificial Analysis Intelligence Index' },
-  { k:'aa_coding', label:'Coding',     n:1, hue:'score', scale:v => clamp01((v - 5) / 60), fmt:num(0), tip:'Artificial Analysis Coding Index' },
-  { k:'aa_agentic',label:'Agentic',    n:1, hue:'score', scale:v => clamp01((v - 5) / 60), fmt:num(0), tip:'Artificial Analysis Agentic Index' },
-  { k:'epoch_eci', label:'ECI',        n:1, hue:'score', scale:v => clamp01((v - 110) / 55), fmt:num(0), tip:'Epoch Capabilities Index (composite of many benchmarks)' },
-  { k:'epoch_gpqa',label:'GPQA',       n:1, hue:'score', scale:v => clamp01((v - 30) / 65), fmt:num(0), tip:'GPQA Diamond, % (Epoch AI)' },
-  { k:'epoch_swe', label:'SWE-V',      n:1, hue:'score', scale:v => clamp01((v - 20) / 70), fmt:num(0), tip:'SWE-bench Verified, % (Epoch AI)' },
-  { k:'params_b',  label:'Params B',   n:1, hue:'size', scale:log(0.1, 1000), fmt:v => v < 10 ? v.toFixed(2) : v.toFixed(1) },
-  { k:'active_b',  label:'Active B',   n:1, hue:'size', scale:log(0.1, 1000), fmt:v => v == null ? '' : v },
-  { k:'fp16',      label:'FP16 GB',    n:1, hue:'size', scale:log(0.1, 1000), fmt:num(1), tip:'weights only, 2 bytes/param' },
-  { k:'q8',        label:'Q8 GB',      n:1, hue:'size', scale:log(0.1, 1000), fmt:num(1), tip:'weights only, 1 byte/param' },
-  { k:'q4',        label:'Q4 GB',      n:1, hue:'size', scale:log(0.1, 1000), fmt:num(1), tip:'weights only, ~0.57 bytes/param' },
-  { k:'context',   label:'Context',    n:1, hue:'size', scale:log(4096, 1048576), fmt:v => v == null ? '' : (v >= 1024 ? Math.round(v / 1024) + 'K' : v) },
-  { k:'downloads', label:'Downloads',  n:1, hue:'pop', scale:log(1e3, 3e7), fmt:v => v.toLocaleString() },
-  { k:'likes',     label:'Likes',      n:1, hue:'pop', scale:log(10, 5000), fmt:v => v.toLocaleString() },
-  { k:'created',   label:'Created',    hue:'new', scale:recent },
-  { k:'updated',   label:'Updated',    hue:'new', scale:recent },
+  { k:'country',   label:'Country', tip:"Country of the lab that released the model.\nClick to sort." },
+  { k:'org',       label:'Org', tip:"Organization that released the weights (Hugging Face author)." },
+  { k:'product',   label:'Product', tip:"Model family, parsed from the Hugging Face model name.\nClick a cell to open the model page on Hugging Face." },
+  { k:'version',   label:'Ver', hue:'new', scale:(v, m) => m.ver_t, tip:"Version number parsed from the name.\nShading: newest version in its family is strongest, then the previous two fainter." },
+  { k:'variant',   label:'Variant', tip:"Everything else in the name: size tag, Instruct, Base, Thinking, Coder, etc." },
+  { k:'aa_intel',  label:'Intel',      n:1, hue:'score', scale:v => clamp01((v - 5) / 60), fmt:num(0), tip:"Artificial Analysis Intelligence Index.\nComposite of many evals, roughly 0-70 for current models. Higher is better.\nOnly models Artificial Analysis lists and we could match by name." },
+  { k:'aa_coding', label:'Coding',     n:1, hue:'score', scale:v => clamp01((v - 5) / 60), fmt:num(0), tip:"Artificial Analysis Coding Index.\nComposite of coding evals (e.g. Terminal-Bench, SciCode). Higher is better." },
+  { k:'aa_agentic',label:'Agentic',    n:1, hue:'score', scale:v => clamp01((v - 5) / 60), fmt:num(0), tip:"Artificial Analysis Agentic Index.\nComposite of agentic tool-use evals. Higher is better." },
+  { k:'epoch_eci', label:'ECI',        n:1, hue:'score', scale:v => clamp01((v - 110) / 55), fmt:num(0), tip:"Epoch Capabilities Index (Epoch AI).\nOne number combining many benchmarks onto a common scale; ~110-165 here. Higher is better." },
+  { k:'epoch_gpqa',label:'GPQA',       n:1, hue:'score', scale:v => clamp01((v - 30) / 65), fmt:num(0), tip:"GPQA Diamond accuracy, % (Epoch AI runs).\nGraduate-level science multiple choice; random guessing is 25%." },
+  { k:'epoch_swe', label:'SWE-V',      n:1, hue:'score', scale:v => clamp01((v - 20) / 70), fmt:num(0), tip:"SWE-bench Verified, % of real GitHub issues resolved (Epoch AI runs).\nDepends heavily on the agent harness used." },
+  { k:'params_b',  label:'Params B',   n:1, hue:'size', scale:log(0.1, 1000), fmt:v => v < 10 ? v.toFixed(2) : v.toFixed(1), tip:"Total parameters, in billions.\nFrom Hugging Face safetensors metadata, or the size in the model name.\nFor MoE models this is all experts, which is what must fit in memory." },
+  { k:'active_b',  label:'Active B',   n:1, hue:'size', scale:log(0.1, 1000), fmt:v => v == null ? '' : v, tip:"MoE only: parameters active per token, in billions.\nParsed from names like A3B. Blank = dense or not stated in the name.\nSets speed, not memory." },
+  { k:'fp16',      label:'FP16 GB',    n:1, hue:'size', scale:log(0.1, 1000), fmt:num(1), tip:"Memory for weights at 16 bits: params x 2 bytes.\nExcludes KV cache and runtime overhead; add 10-30%+." },
+  { k:'q8',        label:'Q8 GB',      n:1, hue:'size', scale:log(0.1, 1000), fmt:num(1), tip:"Memory for weights at 8 bits: params x 1 byte.\nExcludes KV cache and runtime overhead." },
+  { k:'q4',        label:'Q4 GB',      n:1, hue:'size', scale:log(0.1, 1000), fmt:num(1), tip:"Memory for weights at ~4.5 bits (typical Q4 GGUF): params x ~0.57 bytes.\nExcludes KV cache and runtime overhead." },
+  { k:'context',   label:'Context',    n:1, hue:'size', scale:log(4096, 1048576), fmt:v => v == null ? '' : (v >= 1024 ? Math.round(v / 1024) + 'K' : v), tip:"Maximum context window in tokens, from OpenRouter.\nBlank = not listed there. KV cache for long contexts adds a lot of memory." },
+  { k:'downloads', label:'Downloads',  n:1, hue:'pop', scale:log(1e3, 3e7), fmt:v => v.toLocaleString(), tip:"Hugging Face downloads over the last 30 days.\nColor is log-scaled." },
+  { k:'likes',     label:'Likes',      n:1, hue:'pop', scale:log(10, 5000), fmt:v => v.toLocaleString(), tip:"Hugging Face likes (all time)." },
+  { k:'created',   label:'Created',    hue:'new', scale:recent, tip:"Date the repo was created on Hugging Face.\nGreener = more recent (fades to none over a year)." },
+  { k:'updated',   label:'Updated',    hue:'new', scale:recent, tip:"Date of the last commit to the repo on Hugging Face.\nGreener = more recent." },
 ];
 const DEFAULT_SORT = [['country',1],['org',1],['product',1],['version',-1],['params_b',-1]];
 const tint = (c, pct) => c ? `background:color-mix(in srgb, ${c} ${pct}%, transparent)` : '';
@@ -116,11 +118,11 @@ function render() {
   $('status').textContent = `${rows.length} of ${models.length} models · ${info}`;
   const sk = sort[0] && sort[0][0], sd = sort[0] && sort[0][1];
   $('head').innerHTML = COLS.map(c =>
-    `<th data-k="${c.k}" class="${c.n ? 'n' : ''} ${c.k === sk ? 'sorted' : ''}" title="${c.tip || ''}">${c.label}${c.k === sk ? (sd > 0 ? ' ▲' : ' ▼') : ''}</th>`).join('');
+    `<th data-k="${c.k}" class="${c.n ? 'n' : ''} ${c.k === sk ? 'sorted' : ''}" data-tip="${(c.tip || '').replace(/"/g, '&quot;')}">${c.label}${c.k === sk ? (sd > 0 ? ' ▲' : ' ▼') : ''}</th>`).join('');
   $('body').innerHTML = rows.map(m => '<tr>' + COLS.map(c => {
     const v = m[c.k];
     let style = '', html;
-    if (c.k === 'country') { style = tint(countries[m.country]?.color, 16); html = `<span title="${countries[m.country]?.name || ''}">${m.country}</span>`; }
+    if (c.k === 'country') { style = tint(countries[m.country]?.color, 16); html = `<span data-tip="${countries[m.country]?.name || ''}">${m.country}</span>`; }
     else if (c.k === 'org') { style = tint(orgs[m.org], 16); html = m.org; }
     else if (c.k === 'product') { style = tint(orgs[m.org], 16); html = `<a href="https://huggingface.co/${m.id}" target="_blank" rel="noopener">${m.product}</a>`; }
     else { html = c.fmt ? (v == null ? '' : c.fmt(v)) : (v ?? ''); if (c.hue && v != null && v !== '') style = heat(c.hue, c.scale(v, m)); }
@@ -133,6 +135,18 @@ function render() {
     render();
   });
 }
+
+const tipEl = $('tip');
+document.addEventListener('mouseover', e => {
+  const t = e.target.closest('[data-tip]');
+  if (!t || !t.dataset.tip) { tipEl.style.display = 'none'; return; }
+  tipEl.textContent = t.dataset.tip;
+  tipEl.style.display = 'block';
+  const r = t.getBoundingClientRect(), w = tipEl.offsetWidth, h = tipEl.offsetHeight;
+  tipEl.style.left = Math.max(4, Math.min(r.left, innerWidth - w - 4)) + 'px';
+  tipEl.style.top = (r.bottom + h + 6 > innerHeight ? r.top - h - 4 : r.bottom + 4) + 'px';
+});
+document.addEventListener('mouseleave', () => tipEl.style.display = 'none');
 
 Promise.all([fetch('data/models.json').then(r => r.json()), fetch('data/orgs.json').then(r => r.json())]).then(([d, o]) => {
   countries = o.countries;
