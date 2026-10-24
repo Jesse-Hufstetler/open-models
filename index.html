@@ -24,9 +24,14 @@
   td.link:hover { box-shadow:inset 0 0 0 100px rgba(0,0,0,.10); }
   @media (prefers-color-scheme: dark) { td.link:hover { box-shadow:inset 0 0 0 100px rgba(255,255,255,.14); } }
   #tip { position:fixed; z-index:10; max-width:340px; padding:6px 8px; background:#111; color:#eee; border:1px solid #555; border-radius:3px; font-size:12px; line-height:1.3; white-space:pre-line; pointer-events:none; box-shadow:0 3px 10px rgba(0,0,0,.4); display:none; }
+  .tg { margin-left:4px; padding:0 3px; border:1px solid var(--grid); border-radius:2px; color:var(--accent); }
+  .tg:hover { background:var(--accent); color:var(--bg); }
+  .status a { color:var(--accent); }
+  td.c, th.c { text-align:center; }
   .mute { color:var(--mute); }
   .status { padding:2px 8px; background:var(--head); border-top:1px solid var(--grid); color:var(--mute); font-size:11px; display:flex; flex-wrap:wrap; gap:0 14px; align-items:center; }
   .status label { color:var(--fg); cursor:pointer; white-space:nowrap; }
+  .status input[type=number] { margin:0 2px; vertical-align:baseline; background:var(--bg); color:var(--fg); border:1px solid var(--grid); }
   .status input { margin:0 4px 0 0; vertical-align:-2px; }
 </style>
 </head>
@@ -35,7 +40,7 @@
 <div id="tip"></div>
 <div class="status">
   <label><input type="checkbox" id="f-scored" checked>Hide models with no scores</label>
-  <label><input type="checkbox" id="f-recent" checked>Hide models older than 16 months</label>
+    <label>Max RAM <input type="range" id="f-ram" min="0" max="1000" value="1000" style="width:220px;vertical-align:middle"> <b id="ram-val" style="display:inline-block;min-width:70px">no limit</b></label>
   <span id="status">Loading…</span>
 </div>
 
@@ -46,8 +51,10 @@ const log = (lo, hi) => v => clamp01((Math.log(v) - Math.log(lo)) / (Math.log(hi
 const NOW = Date.now();
 const SCORE_KEYS = ['aa_intel', 'aa_coding', 'aa_agentic', 'epoch_eci', 'epoch_gpqa', 'epoch_swe'];
 const hasScore = m => SCORE_KEYS.some(k => m[k] != null);
-const cutoff = (() => { const d = new Date(NOW); d.setMonth(d.getMonth() - 16); return d.toISOString().slice(0, 10); })();
 const recent = v => clamp01(1 - (NOW - Date.parse(v)) / (365 * 864e5)); // today = 1, a year ago = 0
+const CENTER = new Set(['country', 'version', 'composite', ...SCORE_KEYS, 'params_b', 'active_b', 'q4']);
+const BREAKDOWN = new Set(SCORE_KEYS);
+let showBreakdown = false;
 const COLS = [
   { k:'country',   label:'Country', tip:"Country of the lab that released the model.\nClick to sort." },
   { k:'org',       label:'Org', tip:"Organization that released the weights (Hugging Face author)." },
@@ -62,10 +69,8 @@ const COLS = [
   { k:'epoch_gpqa',label:'GPQA',       n:1, hue:'score', scale:v => clamp01((v - 30) / 65), fmt:num(0), tip:"GPQA Diamond accuracy, % (Epoch AI runs).\nGraduate-level science multiple choice; random guessing is 25%." },
   { k:'epoch_swe', label:'SWE-V',      n:1, hue:'score', scale:v => clamp01((v - 20) / 70), fmt:num(0), tip:"SWE-bench Verified, % solved (Epoch AI runs).\nA test of real-world software engineering: the model gets an actual bug report from a popular open-source Python project and must edit the code to fix it. A fix counts only if the project's own tests then pass. 'Verified' = 500 tasks that humans checked are solvable.\nScores depend a lot on the agent scaffold around the model, so compare with care." },
   { k:'params_b',  label:'Params B',   n:1, hue:'size', scale:log(0.1, 1000), fmt:v => v < 10 ? v.toFixed(2) : v.toFixed(1), tip:"Total parameters, in billions.\nFrom Hugging Face safetensors metadata, or the size in the model name.\nFor MoE models this is all experts, which is what must fit in memory." },
-  { k:'active_b',  label:'Active B',   n:1, hue:'size', scale:log(0.1, 1000), fmt:v => v == null ? '' : v, tip:"MoE only: parameters active per token, in billions.\nParsed from names like A3B. Blank = dense or not stated in the name.\nSets speed, not memory." },
-  { k:'fp16',      label:'FP16 GB',    n:1, hue:'size', scale:log(0.1, 1000), fmt:num(1), tip:"Memory for weights at 16 bits: params x 2 bytes.\nExcludes KV cache and runtime overhead; add 10-30%+." },
-  { k:'q8',        label:'Q8 GB',      n:1, hue:'size', scale:log(0.1, 1000), fmt:num(1), tip:"Memory for weights at 8 bits: params x 1 byte.\nExcludes KV cache and runtime overhead." },
-  { k:'q4',        label:'Q4 GB',      n:1, hue:'size', scale:log(0.1, 1000), fmt:num(1), tip:"Memory for weights at ~4.5 bits (typical Q4 GGUF): params x ~0.57 bytes.\nExcludes KV cache and runtime overhead." },
+  { k:'active_b',  label:'Active B',   n:1, hue:'size', scale:log(0.1, 1000), fmt:v => v == null ? '' : v, tip:"Parameters used per token, in billions. This drives speed.\nMoE models: only the active experts, parsed from names like A3B. Dense models: same as Params B, so you can sort MoE and dense models side by side.\nIf a MoE model does not state its active size in its name, it shows its total here.\nMemory still needs ALL params (see RAM), unless you offload experts to CPU." },
+  { k:'q4',        label:'RAM GB (Q4)',      n:1, hue:'size', scale:log(0.1, 1000), fmt:num(1), tip:"Approximate memory to run the model at 4-bit quantization (Q4_K_M), the most common choice for local use: params x ~0.57 bytes.\nWeights only; add KV cache and overhead (10-30%+). Q8 needs about 1.75x this, FP16 about 3.5x." },
   { k:'context',   label:'Context',    n:1, hue:'size', scale:log(4096, 1048576), fmt:v => v == null ? '' : (v >= 1024 ? Math.round(v / 1024) + 'K' : v), tip:"Maximum context window in tokens, from OpenRouter.\nBlank = not listed there. KV cache for long contexts adds a lot of memory." },
   { k:'downloads', label:'Downloads',  n:1, hue:'pop', scale:log(1e3, 3e7), fmt:v => v.toLocaleString(), tip:"Hugging Face downloads over the last 30 days.\nColor is log-scaled." },
   { k:'likes',     label:'Likes',      n:1, hue:'pop', scale:log(10, 5000), fmt:v => v.toLocaleString(), tip:"Hugging Face likes (all time)." },
@@ -113,6 +118,83 @@ function addComposite(list) {
   }
 }
 
+// Variant glossary: generic tokens, plus family-specific ones keyed "product:token" (lowercase). Unknown tokens just don't get a line.
+const GLOSS = {
+  it: 'Instruction-tuned: trained to follow instructions and chat. This is the one you want for a chatbot or assistant.',
+  instruct: 'Instruction-tuned: trained to follow instructions and chat. This is the one you want for a chatbot or assistant.',
+  instruction: 'Instruction-tuned: trained to follow instructions and chat.',
+  chat: 'Fine-tuned for conversation.',
+  sft: 'Supervised fine-tuning: trained on example conversations or answers.',
+  dpo: 'Direct Preference Optimization: tuned on pairs of better/worse answers to match human preferences.',
+  rl: 'Trained with reinforcement learning (rewarded for good outcomes), often for reasoning.',
+  grpo: 'Trained with GRPO, a reinforcement-learning method used to teach reasoning.',
+  base: 'Base model: raw pretrained weights that only continue text. Not a chatbot. Mainly for fine-tuning or research.',
+  pt: 'Pretrained base model: raw weights that only continue text. Not a chatbot; use the instruct/it version to chat.',
+  pretrain: 'Pretrained base model: raw weights that only continue text.',
+  thinking: 'Reasoning model: writes out a long chain of thought before answering. Smarter on hard problems, slower, uses many more tokens.',
+  think: 'Reasoning model: writes out a long chain of thought before answering.',
+  reasoning: 'Reasoning model: writes out a long chain of thought before answering.',
+  vl: 'Vision-language: can take images (and sometimes video) as well as text.',
+  vlm: 'Vision-language: can take images as well as text.',
+  vision: 'Can take images as input as well as text.',
+  omni: 'Multimodal: handles text plus images, audio and/or video.',
+  ocr: 'Specialized for reading text out of images and documents.',
+  audio: 'Handles audio input/output.',
+  video: 'Handles video input.',
+  coder: 'Specialized for writing code.',
+  code: 'Specialized for writing code.',
+  math: 'Specialized for math problems.',
+  prover: 'Specialized for formal theorem proving.',
+  moe: 'Mixture of experts: only some of the parameters are used per token (see Active B).',
+  distill: 'Distilled: a smaller model trained to imitate a bigger one.',
+  guard: 'Safety/moderation classifier, not a general chat model.',
+  guardian: 'Safety/moderation classifier, not a general chat model.',
+  qat: 'Quantization-aware training: trained so that 4-bit quantizing it loses less quality.',
+  preview: 'Early preview release; may change or be unfinished.',
+  exp: 'Experimental release.',
+  hf: 'Converted to Hugging Face Transformers format (same model, different file layout).',
+  deduped: 'Trained on a de-duplicated copy of the training data (the Pythia models come in normal and deduped versions).',
+  tiny: 'Smallest size tier of this family.',
+  nano: 'Very small size tier of this family.',
+  mini: 'Small size tier of this family.',
+  lite: 'Lightweight size tier of this family.',
+  small: 'Small size tier of this family.',
+  flash: 'Fast, cheaper size tier of this family, usually a mid-sized mixture of experts.',
+  plus: 'Larger size tier of this family.',
+  pro: 'Larger, more capable tier of this family.',
+  large: 'Large size tier of this family.',
+  'gemma:e2b': 'Effective 2B: about 2B parameters of compute per token, but extra per-layer embedding tables make the file bigger (around 5B total). Built to run on phones and laptops.',
+  'gemma:e4b': 'Effective 4B: about 4.5B parameters of compute per token, but per-layer embedding tables bring the total to around 8B. The table lookups are cheap, so it runs like a 4B model but needs more memory.',
+  'gemma:it': 'Instruction-tuned: the chat/assistant version of Gemma. (The raw base version is labeled pt, "pretrained".)',
+  'gemma:assistant': 'Assistant-oriented variant of the instruction-tuned model.',
+  'falcon:h1': 'Falcon-H1: hybrid architecture mixing Transformer attention with Mamba state-space layers, for long contexts at lower memory and compute cost.',
+  'falcon:h1r': 'Falcon-H1R: the reasoning version of Falcon-H1 (7B). Hybrid Transformer + Mamba, trained to think step by step; TII claims it matches much larger reasoning models on math and coding.',
+  'falcon:r': 'R = reasoning variant (trained to think step by step).',
+  'falcon:mamba': 'Pure Mamba (state-space) model with no attention layers: memory use does not grow with context length.',
+  'falcon:e': 'Falcon-Edge: very low-bit (ternary, ~1.58-bit) weights made for tiny devices.',
+  'falcon:deep': 'Deeper (more layers) version at the same parameter count.',
+  'falcon:rw': 'RefinedWeb: older Falcon trained only on filtered web data.',
+  'ling:tiny': 'Ling Tiny: Ant Group’s small mixture-of-experts model, about 8B total with ~1.3B active per token. Fast on modest hardware.',
+  'ling:flash': 'Ling Flash: Ant Group’s speed-focused mixture of experts, about 124B total with ~5B active per token (Ling 3.0).',
+  'ling:mini': 'Ling Mini: small mixture-of-experts tier of the Ling family.',
+  'ling:lite': 'Ling Lite: lightweight mixture-of-experts tier of the Ling family.',
+  'ling:plus': 'Ling Plus: larger mixture-of-experts tier of the Ling family.',
+  'ling:1t': 'Trillion-parameter flagship mixture of experts of the Ling family.'
+};
+const variantTip = (m) => {
+  const seen = new Set(), lines = [];
+  for (const t of String(m.variant || '').split(/\s+/).filter(Boolean)) {
+    const k = t.toLowerCase();
+    const g = GLOSS[String(m.product).toLowerCase() + ':' + k] || GLOSS[k] || (/^\d{4}$/.test(k) ? 'Date-like code, probably the release month/day (e.g. 0414 = April 14).' : /^\d+(\.\d+)?[tbm]$/.test(k) ? null : null);
+    if (g && !seen.has(g)) { seen.add(g); lines.push(t + ': ' + g); }
+  }
+  return lines.join('\n');
+};
+
+// Log-scale slider: 1 GB .. largest model; the far right means no limit.
+const ramLimit = () => { const p = +$('f-ram').value; return p >= 1000 ? null : Math.pow(ramMax, p / 1000); };
+let ramMax = 1000;
+
 function cmp(a, b, k, dir) {
   const x = a[k], y = b[k];
   if (x == null || x === '') return y == null || y === '' ? 0 : 1;
@@ -123,25 +205,30 @@ function cmp(a, b, k, dir) {
 
 function render() {
   const keys = [...sort, ...DEFAULT_SORT];
-  const hideUnscored = $('f-scored').checked, hideOld = $('f-recent').checked;
-  const rows = models.filter(m => (!hideUnscored || hasScore(m)) && (!hideOld || !m.created || m.created >= cutoff)).sort((a, b) => {
+  const hideUnscored = $('f-scored').checked;
+  const maxRam = ramLimit();
+  const rows = models.filter(m => (!hideUnscored || hasScore(m)) && (maxRam == null || m.q4 <= maxRam)).sort((a, b) => {
     for (const [k, d] of keys) { const r = cmp(a, b, k, d); if (r) return r; }
     return 0;
   });
-  $('status').textContent = `${rows.length} of ${models.length} models · ${info}`;
+  $('ram-val').textContent = maxRam == null ? 'no limit' : (maxRam < 10 ? maxRam.toFixed(1) : Math.round(maxRam)) + ' GB';
+  $('status').innerHTML = `${rows.length} of ${models.length} models · ${info}`;
   const sk = sort[0] && sort[0][0], sd = sort[0] && sort[0][1];
-  $('head').innerHTML = COLS.map(c =>
-    `<th data-k="${c.k}" class="${c.n ? 'n' : ''} ${c.k === sk ? 'sorted' : ''}" data-tip="${(c.tip || '').replace(/"/g, '&quot;')}">${c.label}${c.k === sk ? (sd > 0 ? ' ▲' : ' ▼') : ''}</th>`).join('');
-  $('body').innerHTML = rows.map(m => '<tr>' + COLS.map(c => {
+  const cols = COLS.filter(c => showBreakdown || !BREAKDOWN.has(c.k));
+  $('head').innerHTML = cols.map(c =>
+    `<th data-k="${c.k}" class="${c.n ? 'n' : ''} ${CENTER.has(c.k) ? 'c' : ''} ${c.k === sk ? 'sorted' : ''}" data-tip="${(c.tip || '').replace(/"/g, '&quot;')}">${c.label}${c.k === sk ? (sd > 0 ? ' ▲' : ' ▼') : ''}${c.k === 'composite' ? `<span class="tg" data-tip="${showBreakdown ? 'Hide' : 'Show'} the individual scores behind this one">${showBreakdown ? '◂' : '▸'}</span>` : ''}</th>`).join('');
+  $('body').innerHTML = rows.map(m => '<tr>' + cols.map(c => {
     const v = m[c.k];
     let style = '', html;
     if (c.k === 'country') { style = tint(countries[m.country]?.color, 16); html = `<span data-tip="${countries[m.country]?.name || ''}">${m.country}</span>`; }
     else if (c.k === 'org') { style = tint(orgs[m.org], 16); html = m.org; }
     else if (c.k === 'product') { style = tint(orgs[m.org], 16); html = `<a href="https://huggingface.co/${m.id}" target="_blank" rel="noopener">${m.product}</a>`; }
     else { html = c.fmt ? (v == null ? '' : c.fmt(v)) : (v ?? ''); if (c.hue && v != null && v !== '') style = heat(c.hue, c.scale(v, m)); }
-    return `<td class="${c.n ? 'n' : ''}${c.k === 'product' ? ' link' : ''}" style="${style}">${html}</td>`;
+    const tip = c.k === 'variant' ? variantTip(m).replace(/"/g, '&quot;') : '';
+    return `<td class="${c.n ? 'n' : ''}${CENTER.has(c.k) ? ' c' : ''}${c.k === 'product' ? ' link' : ''}" style="${style}"${tip ? ` data-tip="${tip}"` : ''}>${html}</td>`;
   }).join('') + '</tr>').join('');
-  document.querySelectorAll('th[data-k]').forEach(th => th.onclick = () => {
+  document.querySelectorAll('th[data-k]').forEach(th => th.onclick = e => {
+    if (e.target.classList.contains('tg')) { showBreakdown = !showBreakdown; tipEl.style.display = 'none'; render(); return; }
     const k = th.dataset.k;
     const first = COLS.find(c => c.k === k).n ? -1 : 1;
     sort = [[k, sk === k ? -sd : first]];
@@ -164,9 +251,13 @@ document.addEventListener('mouseleave', () => tipEl.style.display = 'none');
 Promise.all([fetch('data/models.json').then(r => r.json()), fetch('data/orgs.json').then(r => r.json())]).then(([d, o]) => {
   countries = o.countries;
   for (const v of Object.values(o.orgs)) orgs[v.org] = v.color;
-  models = d.models.map(m => ({ ...m, version: m.version && m.version.replace(/^v(?=\d)/i, ''), fp16: m.params_b * 2, q8: m.params_b, q4: m.params_b * 0.57 }));
-  info = `updated ${d.generated.slice(0, 10)} · Hugging Face + OpenRouter · scores: Artificial Analysis (artificialanalysis.ai), Epoch AI (epoch.ai, CC BY) · memory is weights only (add KV cache) · Active B = MoE active params when named in the model ID`;
-  ['f-scored', 'f-recent'].forEach(id => $(id).addEventListener('change', render));
+  models = d.models.map(m => ({ ...m, version: m.version && m.version.replace(/^v(?=\d)/i, ''), active_b: m.active_b ?? m.params_b, fp16: m.params_b * 2, q8: m.params_b, q4: m.params_b * 0.57 }));
+  info = `updated ${d.generated.slice(0, 10)} · scores: <a href="https://artificialanalysis.ai" target="_blank" rel="noopener">Artificial Analysis</a>, <a href="https://epoch.ai" target="_blank" rel="noopener">Epoch AI</a> (CC BY) · data: Hugging Face, OpenRouter`;
+  $('f-scored').addEventListener('change', render);
+  ramMax = Math.max(...models.map(m => m.q4));
+  $('f-ram').value = Math.round(1000 * Math.log(16) / Math.log(ramMax)); // default limit: 16 GB
+  $('f-ram').addEventListener('input', render);
+  $('f-ram').addEventListener('wheel', e => { e.preventDefault(); const r = e.currentTarget; r.value = Math.min(1000, Math.max(0, +r.value - Math.sign(e.deltaY) * 10)); render(); }, { passive:false });
   addVersionRank(models);
   addComposite(models);
   render();
