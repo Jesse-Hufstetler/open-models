@@ -18,11 +18,17 @@ const ACTIVE = /^A\d+(\.\d+)?B$/i;
 const VERSION = /^[vr]?\d+(\.\d+)*$/i;
 const PRODUCT_ALIASES = { 'gpt-oss': /^gpt-oss/i };
 
-function getJson(url) {
+const SCORES = path.join(__dirname, '..', 'data', 'scores.json');
+// Free tier is 100 requests/day: one daily run uses 1-2. Cap per run, and skip if the cache is fresh.
+const AA_MAX_REQUESTS = 4;
+const AA_MIN_AGE_H = 20;
+const norm = s => s.toLowerCase().replace(/\(.*?\)/g, '').replace(/[^a-z0-9]/g, '');
+
+function getJson(url, headers) {
   return new Promise((resolve, reject) => {
-    https.get(url, { headers: { 'User-Agent': 'open-models-build' } }, res => {
+    https.get(url, { headers: Object.assign({ 'User-Agent': 'open-models-build' }, headers) }, res => {
       if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-        return resolve(getJson(res.headers.location));
+        return resolve(getJson(res.headers.location, headers));
       }
       if (res.statusCode !== 200) return reject(new Error(res.statusCode + ' ' + url));
       let body = '';
@@ -60,6 +66,47 @@ function parseName(name, author, orgName) {
   return { product, version, variant, active_b: activeTok ? parseFloat(activeTok.slice(1)) : null };
 }
 
+async function loadAa() {
+  let prev = null;
+  try { prev = JSON.parse(fs.readFileSync(SCORES, 'utf8')); } catch (e) {}
+  const key = process.env.AA_API_KEY;
+  if (!key) { console.log('AA: no key, using cached scores'); return prev; }
+  if (prev && Date.now() - Date.parse(prev.fetched) < AA_MIN_AGE_H * 3600e3) {
+    console.log('AA: cache is fresh, not calling the API');
+    return prev;
+  }
+  try {
+    const out = [];
+    let requests = 0;
+    for (let page = 1; page <= AA_MAX_REQUESTS; page++) {
+      requests++;
+      const r = await getJson('https://artificialanalysis.ai/api/v2/language/models/free?page=' + page + '&page_size=100', { 'x-api-key': key });
+      if (!Array.isArray(r.data)) throw new Error('unexpected response shape: ' + Object.keys(r).join(','));
+      for (const m of r.data) {
+        const e = m.evaluations || {};
+        out.push({
+          name: m.name,
+          slug: m.slug,
+          creator: m.model_creator && m.model_creator.name,
+          released: m.release_date,
+          intelligence: e.artificial_analysis_intelligence_index,
+          coding: e.artificial_analysis_coding_index,
+          agentic: e.artificial_analysis_agentic_index,
+          tps: m.performance && m.performance.median_output_tokens_per_second,
+        });
+      }
+      if (!(r.pagination && r.pagination.has_more)) break;
+    }
+    const scores = { fetched: new Date().toISOString(), source: 'Artificial Analysis', models: out };
+    fs.writeFileSync(SCORES, JSON.stringify(scores, null, 1));
+    console.log('AA: fetched ' + out.length + ' models in ' + requests + ' request(s)');
+    return scores;
+  } catch (e) {
+    console.warn('AA fetch failed, keeping cached scores:', e.message);
+    return prev;
+  }
+}
+
 async function main() {
   const authors = Object.keys(ORGS.orgs);
   const [lists, or] = await Promise.all([
@@ -70,6 +117,17 @@ async function main() {
       '&expand[]=createdAt&expand[]=pipeline_tag'))),
     getJson('https://openrouter.ai/api/v1/models'),
   ]);
+
+  const aa = await loadAa();
+  const aaByName = {};
+  if (aa) {
+    for (const m of aa.models) {
+      const k = norm(m.name);
+      // AA lists reasoning and non-reasoning variants under one name; keep the stronger one.
+      if (m.intelligence != null && (!aaByName[k] || m.intelligence > aaByName[k].intelligence)) aaByName[k] = m;
+    }
+  }
+  let aaMatched = 0;
 
   const orByHf = {};
   for (const m of or.data || []) {
@@ -89,6 +147,8 @@ async function main() {
       if (!params) continue;
       const o = orByHf[m.id];
       const license = (m.tags.find(t => t.startsWith('license:')) || '').slice(8) || null;
+      const a = aaByName[norm(name)];
+      if (a) aaMatched++;
       models.push({
         id: m.id,
         country: org.country,
@@ -100,6 +160,10 @@ async function main() {
         license,
         created: m.createdAt ? m.createdAt.slice(0, 10) : null,
         updated: m.lastModified ? m.lastModified.slice(0, 10) : null,
+        aa_intel: a ? a.intelligence : null,
+        aa_coding: a ? a.coding : null,
+        aa_agentic: a ? a.agentic : null,
+        aa_tps: a ? a.tps : null,
         context: o ? o.context_length : null,
         price_in: o ? Number(o.pricing.prompt) * 1e6 : null,
         price_out: o ? Number(o.pricing.completion) * 1e6 : null,
@@ -107,6 +171,7 @@ async function main() {
     }
   });
 
+  if (aa) console.log('AA: matched ' + aaMatched + ' of ' + aa.models.length + ' AA models to rows');
   if (models.length < 20) throw new Error('suspiciously few models: ' + models.length);
 
   // Only rewrite when the data changed, so the Action doesn't commit noise.

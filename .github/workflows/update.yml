@@ -18,13 +18,15 @@ jobs:
           node-version: 20
       - run: node scripts/build-models.js
         continue-on-error: true
+        env:
+          AA_API_KEY: ${{ secrets.AA_API_KEY }}
       - name: Commit if changed
         continue-on-error: true
         run: |
           if [ -n "$(git status --porcelain data/)" ]; then
             git config user.name "github-actions"
             git config user.email "github-actions@users.noreply.github.com"
-            git add data/models.json
+            git add data/
             git commit -m "data: update models.json"
             git push
           fi

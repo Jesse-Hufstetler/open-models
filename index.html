@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Open Models</title>
 <style>
-  :root { --bg:#fff; --fg:#111; --mute:#6b7280; --grid:#d4d4d8; --head:#ececee; --gutter:#f4f4f5; --accent:#2563eb; --size:234,88,12; --pop:37,99,235; --new:22,163,74; --cost:147,51,234; }
+  :root { --bg:#fff; --fg:#111; --mute:#6b7280; --grid:#d4d4d8; --head:#ececee; --gutter:#f4f4f5; --accent:#2563eb; --size:234,88,12; --pop:37,99,235; --new:22,163,74; --cost:147,51,234; --score:13,148,136; }
   @media (prefers-color-scheme: dark) {
-    :root { --bg:#16181c; --fg:#e6e6e6; --mute:#9aa0a6; --grid:#33373d; --head:#23262b; --gutter:#1d2025; --accent:#6ea8fe; --size:251,146,60; --pop:96,165,250; --new:74,222,128; --cost:192,132,252; }
+    :root { --bg:#16181c; --fg:#e6e6e6; --mute:#9aa0a6; --grid:#33373d; --head:#23262b; --gutter:#1d2025; --accent:#6ea8fe; --size:251,146,60; --pop:96,165,250; --new:74,222,128; --cost:192,132,252; --score:45,212,191; }
   }
   * { box-sizing:border-box; }
   html, body { height:100%; margin:0; }
@@ -41,6 +41,9 @@ const COLS = [
   { k:'product',   label:'Product' },
   { k:'version',   label:'Ver', hue:'new', scale:(v, m) => m.ver_t, tip:'newest version of its product line = strongest' },
   { k:'variant',   label:'Variant' },
+  { k:'aa_intel',  label:'Intel',      n:1, hue:'score', scale:v => clamp01((v - 5) / 60), fmt:num(0), tip:'Artificial Analysis Intelligence Index' },
+  { k:'aa_coding', label:'Coding',     n:1, hue:'score', scale:v => clamp01((v - 5) / 60), fmt:num(0), tip:'Artificial Analysis Coding Index' },
+  { k:'aa_agentic',label:'Agentic',    n:1, hue:'score', scale:v => clamp01((v - 5) / 60), fmt:num(0), tip:'Artificial Analysis Agentic Index' },
   { k:'params_b',  label:'Params B',   n:1, hue:'size', scale:log(0.1, 1000), fmt:v => v < 10 ? v.toFixed(2) : v.toFixed(1) },
   { k:'active_b',  label:'Active B',   n:1, hue:'size', scale:log(0.1, 1000), fmt:v => v == null ? '' : v },
   { k:'fp16',      label:'FP16 GB',    n:1, hue:'size', scale:log(0.1, 1000), fmt:num(1), tip:'weights only, 2 bytes/param' },
@@ -122,7 +125,7 @@ Promise.all([fetch('data/models.json').then(r => r.json()), fetch('data/orgs.jso
   countries = o.countries;
   for (const v of Object.values(o.orgs)) orgs[v.org] = v.color;
   models = d.models.map(m => ({ ...m, fp16: m.params_b * 2, q8: m.params_b, q4: m.params_b * 0.57 }));
-  $('status').textContent = `${models.length} models · updated ${d.generated.slice(0, 10)} · Hugging Face + OpenRouter · memory is weights only (add KV cache) · Active B = MoE active params when named in the model ID`;
+  $('status').textContent = `${models.length} models · updated ${d.generated.slice(0, 10)} · Hugging Face + OpenRouter · scores: Artificial Analysis (artificialanalysis.ai) · memory is weights only (add KV cache) · Active B = MoE active params when named in the model ID`;
   addVersionRank(models);
   render();
 }).catch(() => { $('status').textContent = 'Could not load data'; });
