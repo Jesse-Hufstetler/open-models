@@ -98,7 +98,7 @@ function addVersionRank(list) {
   }
 }
 
-let info = '', models = [], orgs = {}, countries = {}, sort = [];
+let info = '', models = [], orgs = {}, countries = {}, sort = [['composite', -1]];
 const $ = id => document.getElementById(id);
 
 // Percentile rank per score column across all models, averaged over the scores a model has.
