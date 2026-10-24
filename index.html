@@ -236,6 +236,7 @@ function render() {
     const tip = c.k === 'variant' ? variantTip(m).replace(/"/g, '&quot;') : '';
     return `<td class="${c.n ? 'n' : ''}${CENTER.has(c.k) ? ' c' : ''}${c.k === 'product' ? ' link' : c.k === 'id' ? ' link id-cell' : ''}" style="${style}"${tip ? ` data-tip="${tip}"` : ''}>${html}</td>`;
   }).join('') + '</tr>').join('');
+  try { localStorage.setItem('om-prefs', JSON.stringify({ hideUnscored, ram: +$('f-ram').value, showBreakdown, sort })); } catch (_) {}
   document.querySelectorAll('th[data-k]').forEach(th => th.onclick = e => {
     if (e.target.classList.contains('tg')) { showBreakdown = !showBreakdown; tipEl.style.display = 'none'; render(); return; }
     const k = th.dataset.k;
@@ -272,6 +273,15 @@ Promise.all([fetch('data/models.json', {cache:'no-cache'}).then(r => r.json()), 
   $('f-scored').addEventListener('change', render);
   ramMax = Math.max(...models.map(m => m.q4));
   $('f-ram').value = Math.round(1000 * Math.log(16) / Math.log(ramMax)); // default limit: 16 GB
+  try {
+    const p = JSON.parse(localStorage.getItem('om-prefs') || 'null');
+    if (p) {
+      if (typeof p.hideUnscored === 'boolean') $('f-scored').checked = p.hideUnscored;
+      if (Number.isFinite(p.ram)) $('f-ram').value = Math.min(1000, Math.max(0, p.ram));
+      if (typeof p.showBreakdown === 'boolean') showBreakdown = p.showBreakdown;
+      if (Array.isArray(p.sort) && p.sort.length && p.sort.every(x => COLS.some(c => c.k === x[0]) && (x[1] === 1 || x[1] === -1))) sort = p.sort;
+    }
+  } catch (_) {}
   $('f-ram').addEventListener('input', render);
   $('f-ram').addEventListener('wheel', e => { e.preventDefault(); const r = e.currentTarget; r.value = Math.min(1000, Math.max(0, +r.value - Math.sign(e.deltaY) * 10)); render(); }, { passive:false });
   addVersionRank(models);
