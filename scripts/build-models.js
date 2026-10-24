@@ -10,6 +10,15 @@ const path = require('path');
 const OUT = path.join(__dirname, '..', 'data', 'models.json');
 const ORGS = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'orgs.json'), 'utf8'));
 const PER_ORG = 100;
+const NEWEST_PER_ORG = 30;
+const NEW_ORGS = path.join(__dirname, '..', 'data', 'new-orgs.json');
+
+// Anything reported here makes the workflow open one GitHub issue (see update.yml). The build itself still
+// succeeds on partial failure so the last good data stays published.
+function problem(msg) {
+  console.warn(msg);
+  if (process.env.STATUS_FILE) fs.appendFileSync(process.env.STATUS_FILE, msg + '\n');
+}
 const PIPELINES = new Set(['text-generation', 'image-text-to-text', 'any-to-any']);
 const SKIP = /(awq|gptq|gguf|fp8|fp4|mlx|bnb|int[48]|[1248]bit|w4a16|w8a8|quantized|tiny-random|^tiny-|oblit|eagle|speculator|onnx)/i;
 const PRECISION = /^(bf16|fp16|f16)$/i;
@@ -106,7 +115,9 @@ function loadEpoch() {
     const out = {
       fetched: new Date().toISOString(),
       source: 'Epoch AI (CC BY 4.0)',
-      eci: pick(read('epoch_capabilities_index/eci_scores.csv'), 'Display name', 'eci', 1),
+      eci: read('epoch_capabilities_index/eci_scores.csv')
+        .map(r => ({ name: r['Display name'], v: parseFloat(r.eci), org: r.Organization, open: /open/i.test(r['Accessibility group'] || '') }))
+        .filter(r => r.name && isFinite(r.v)),
       gpqa: pick(read('gpqa_diamond.csv'), 'Model version', 'mean_score', 100),
       swe: pick(read('swe_bench_verified.csv'), 'Model version', 'mean_score', 100),
     };
@@ -115,7 +126,7 @@ function loadEpoch() {
     console.log('Epoch: ' + out.eci.length + ' ECI, ' + out.gpqa.length + ' GPQA, ' + out.swe.length + ' SWE-bench rows');
     return out;
   } catch (e) {
-    console.warn('Epoch parse failed, keeping cached scores:', e.message);
+    problem('Epoch data could not be read, keeping cached scores: ' + e.message);
     return prev;
   }
 }
@@ -156,19 +167,28 @@ async function loadAa() {
     console.log('AA: fetched ' + out.length + ' models in ' + requests + ' request(s)');
     return scores;
   } catch (e) {
-    console.warn('AA fetch failed, keeping cached scores:', e.message);
+    problem('Artificial Analysis fetch failed, keeping cached scores: ' + e.message);
     return prev;
   }
 }
 
 async function main() {
   const authors = Object.keys(ORGS.orgs);
+  const hfUrl = (author, sort, limit) =>
+    'https://huggingface.co/api/models?author=' + encodeURIComponent(author) +
+    '&sort=' + sort + '&direction=-1&limit=' + limit +
+    '&expand[]=safetensors&expand[]=downloads&expand[]=likes&expand[]=tags&expand[]=lastModified' +
+    '&expand[]=createdAt&expand[]=pipeline_tag';
+  // Most-downloaded catches the established models; newest catches fresh releases that have few downloads yet.
   const [lists, or] = await Promise.all([
-    Promise.all(authors.map(a => getJson(
-      'https://huggingface.co/api/models?author=' + encodeURIComponent(a) +
-      '&sort=downloads&direction=-1&limit=' + PER_ORG +
-      '&expand[]=safetensors&expand[]=downloads&expand[]=likes&expand[]=tags&expand[]=lastModified' +
-      '&expand[]=createdAt&expand[]=pipeline_tag'))),
+    Promise.all(authors.map(async a => {
+      const [top, fresh] = await Promise.all([
+        getJson(hfUrl(a, 'downloads', PER_ORG)),
+        getJson(hfUrl(a, 'createdAt', NEWEST_PER_ORG)),
+      ]);
+      const seen = new Set(top.map(m => m.id));
+      return top.concat(fresh.filter(m => !seen.has(m.id)));
+    })),
     getJson('https://openrouter.ai/api/v1/models'),
   ]);
 
@@ -241,6 +261,19 @@ async function main() {
     }
   });
 
+  // Labs that Epoch marks open-weight but that aren't in data/orgs.json yet: the list to extend next.
+  const known = Object.entries(ORGS.orgs).flatMap(([author, o]) => [norm(author), norm(o.org)].concat((o.aliases || []).map(norm)));
+  const missing = {};
+  for (const r of (epoch && epoch.eci) || []) {
+    if (!r.open || !r.org) continue;
+    const n = norm(r.org);
+    if (known.some(k => k && (n.includes(k) || k.includes(n)))) continue;
+    (missing[r.org] = missing[r.org] || []).push(r.name);
+  }
+  const newOrgs = Object.entries(missing).sort().map(([org, names]) => ({ org, count: names.length, examples: names.slice(0, 3) }));
+  fs.writeFileSync(NEW_ORGS, JSON.stringify(newOrgs, null, 1));
+  if (newOrgs.length) console.log('New open-weight labs not in orgs.json: ' + newOrgs.map(o => o.org).join(', '));
+
   if (aa) console.log('AA: matched ' + aaMatched + ' of ' + aa.models.length + ' AA models to rows');
   if (epoch) console.log('Epoch: matched ' + epochMatched + ' ECI rows to models');
   if (models.length < 20) throw new Error('suspiciously few models: ' + models.length);
@@ -257,6 +290,6 @@ async function main() {
 }
 
 main().catch(e => {
-  console.warn('build failed, keeping previous data:', e.message);
+  problem('Build failed, keeping previous data: ' + e.message);
   process.exit(0);
 });

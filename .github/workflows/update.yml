@@ -7,21 +7,27 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 jobs:
   update:
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      STATUS_FILE: /tmp/status.txt
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
       - name: Download Epoch benchmark data
+        id: epoch
         continue-on-error: true
         run: |
           curl -fsSL -o /tmp/epoch.zip https://epoch.ai/data/benchmark_data.zip
           unzip -q /tmp/epoch.zip -d /tmp/epoch
       - run: node scripts/build-models.js
+        id: build
         continue-on-error: true
         env:
           AA_API_KEY: ${{ secrets.AA_API_KEY }}
@@ -35,4 +41,26 @@ jobs:
             git add data/
             git commit -m "data: update models.json"
             git push
+          fi
+      # One issue (so one email) per ongoing problem; closed automatically on the next clean run.
+      - name: Report problems
+        run: |
+          if [ "${{ steps.epoch.outcome }}" = "failure" ]; then echo "Epoch ZIP download failed." >> "$STATUS_FILE"; fi
+          if [ "${{ steps.build.outcome }}" = "failure" ]; then echo "Build script crashed." >> "$STATUS_FILE"; fi
+          TITLE="Data update is failing"
+          OPEN=$(gh issue list --state open --search "\"$TITLE\" in:title" --json number -q '.[0].number')
+          if [ -s "$STATUS_FILE" ]; then
+            if [ -z "$OPEN" ]; then
+              gh issue create --title "$TITLE" --body "$(printf 'The daily run hit problems (the site keeps the last good data):\n\n'; sed 's/^/- /' "$STATUS_FILE"; printf '\nRun: %s/%s/actions/runs/%s\n' "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID")"
+            fi
+          elif [ -n "$OPEN" ]; then
+            gh issue close "$OPEN" --comment "Clean run; closing."
+          fi
+      - name: Report new labs
+        run: |
+          TITLE="New open-weight labs to add to orgs.json"
+          COUNT=$(node -e "console.log(require('./data/new-orgs.json').length)")
+          OPEN=$(gh issue list --state open --search "\"$TITLE\" in:title" --json number -q '.[0].number')
+          if [ "$COUNT" -gt 0 ] && [ -z "$OPEN" ]; then
+            gh issue create --title "$TITLE" --body "$(printf 'Epoch lists open-weight models from labs that are not in data/orgs.json:\n\n'; node -e "for (const o of require('./data/new-orgs.json')) console.log('- ' + o.org + ' (' + o.count + '): ' + o.examples.join(', '))"; printf '\nAdd each one to data/orgs.json with its Hugging Face author name, country and brand color.\n')"
           fi

@@ -1,0 +1,55 @@
+[
+ {
+  "org": "Baichuan",
+  "count": 3,
+  "examples": [
+   "Baichuan2-13B",
+   "Baichuan 2-7B",
+   "Baichuan1-7B"
+  ]
+ },
+ {
+  "org": "Cerebras Systems",
+  "count": 1,
+  "examples": [
+   "Cerebras-GPT-13B"
+  ]
+ },
+ {
+  "org": "Databricks",
+  "count": 1,
+  "examples": [
+   "Dolly 2.0-12b"
+  ]
+ },
+ {
+  "org": "MosaicML",
+  "count": 2,
+  "examples": [
+   "MPT-30B",
+   "MPT-7B"
+  ]
+ },
+ {
+  "org": "Salesforce",
+  "count": 1,
+  "examples": [
+   "XGen-7B"
+  ]
+ },
+ {
+  "org": "Stability AI",
+  "count": 1,
+  "examples": [
+   "Stable Beluga 2"
+  ]
+ },
+ {
+  "org": "Thinking Machines",
+  "count": 2,
+  "examples": [
+   "Inkling-Small",
+   "Inkling"
+  ]
+ }
+]
