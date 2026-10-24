@@ -36,7 +36,7 @@
     "ibm-granite": { "org": "IBM", "country": "US", "color": "#0f62fe" },
     "HuggingFaceTB": { "org": "Hugging Face", "country": "US", "color": "#ffd21e" },
     "EleutherAI": { "org": "EleutherAI", "country": "US" },
-    "PrimeIntellect": { "org": "Prime Intellect", "country": "US" },
+    "PrimeIntellect": { "org": "Prime Intellect", "country": "US", "color": "#4ea06a" },
     "NousResearch": { "org": "Nous Research", "country": "US" },
     "LiquidAI": { "org": "Liquid AI", "country": "US", "color": "#7c3aed" },
     "poolside": { "org": "poolside", "country": "US" },
