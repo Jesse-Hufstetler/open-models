@@ -72,7 +72,7 @@ const COLS = [
   { k:'created',   label:'Created',    hue:'new', scale:recent, tip:"Date the repo was created on Hugging Face.\nGreener = more recent (fades to none over a year)." },
   { k:'updated',   label:'Updated',    hue:'new', scale:recent, tip:"Date of the last commit to the repo on Hugging Face.\nGreener = more recent." },
 ];
-const DEFAULT_SORT = [['country',1],['org',1],['product',1],['version',-1],['params_b',-1]];
+const DEFAULT_SORT = [['composite',-1],['country',1],['org',1],['product',1],['version',-1],['params_b',-1]];
 const tint = (c, pct) => c ? `background:color-mix(in srgb, ${c} ${pct}%, transparent)` : '';
 // Boring values (low t) get no color; only the high end gets noticeable.
 const heat = (hue, t) => t < 0.12 ? '' : `background:rgba(var(--${hue}), ${(0.05 + 0.5 * t * t).toFixed(2)})`;
