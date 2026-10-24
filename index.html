@@ -268,7 +268,7 @@ Promise.all([fetch('data/models.json', {cache:'no-cache'}).then(r => r.json()), 
   countries = o.countries;
   for (const v of Object.values(o.orgs)) orgs[v.org] = v.color;
   models = d.models.map(m => ({ ...m, version: m.version && m.version.replace(/^v(?=\d)/i, ''), active_b: m.active_b ?? m.params_b, fp16: m.params_b * 2, q8: m.params_b, q4: m.params_b * 0.57 }));
-  info = `updated ${d.generated.slice(0, 10)} · scores: <a href="https://artificialanalysis.ai" target="_blank" rel="noopener">Artificial Analysis</a>, <a href="https://epoch.ai" target="_blank" rel="noopener">Epoch AI</a> (CC BY) · data: Hugging Face, OpenRouter`;
+  info = `updated ${d.generated.slice(0, 10)} · scores: <a href="https://artificialanalysis.ai" target="_blank" rel="noopener">Artificial Analysis</a>, <a href="https://epoch.ai" target="_blank" rel="noopener">Epoch AI</a> (CC BY) · data: Hugging Face, OpenRouter · Made by <a href="https://jesse-hufstetler.github.io/">Jesse Hufstetler</a>, mostly for himself to use and goof around with`;
   $('f-scored').addEventListener('change', render);
   ramMax = Math.max(...models.map(m => m.q4));
   $('f-ram').value = Math.round(1000 * Math.log(16) / Math.log(ramMax)); // default limit: 16 GB
