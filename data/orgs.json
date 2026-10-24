@@ -43,7 +43,7 @@
     "mistralai": { "org": "Mistral", "country": "FR", "color": "#fa520f" },
     "bigscience": { "org": "BigScience", "country": "FR" },
     "LGAI-EXAONE": { "org": "LG AI Research", "country": "KR", "color": "#a50034" },
-    "upstage": { "org": "Upstage", "country": "KR" },
+    "upstage": { "org": "Upstage", "country": "KR", "color": "#8b7bf2" },
     "rinna": { "org": "rinna", "country": "JP" },
     "CohereLabs": { "org": "Cohere", "country": "CA" },
     "tiiuae": { "org": "TII", "country": "AE", "color": "#6a00f4", "aliases": ["Technology Innovation Institute"] },
