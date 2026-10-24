@@ -38,7 +38,7 @@
     "EleutherAI": { "org": "EleutherAI", "country": "US" },
     "PrimeIntellect": { "org": "Prime Intellect", "country": "US" },
     "NousResearch": { "org": "Nous Research", "country": "US" },
-    "LiquidAI": { "org": "Liquid AI", "country": "US" },
+    "LiquidAI": { "org": "Liquid AI", "country": "US", "color": "#7c3aed" },
     "poolside": { "org": "poolside", "country": "US" },
     "mistralai": { "org": "Mistral", "country": "FR", "color": "#fa520f" },
     "bigscience": { "org": "BigScience", "country": "FR" },
