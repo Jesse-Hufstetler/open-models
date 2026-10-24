@@ -46,7 +46,7 @@
     "upstage": { "org": "Upstage", "country": "KR" },
     "rinna": { "org": "rinna", "country": "JP" },
     "CohereLabs": { "org": "Cohere", "country": "CA" },
-    "tiiuae": { "org": "TII", "country": "AE", "aliases": ["Technology Innovation Institute"] },
+    "tiiuae": { "org": "TII", "country": "AE", "color": "#6a00f4", "aliases": ["Technology Innovation Institute"] },
     "swiss-ai": { "org": "Swiss AI", "country": "CH" },
     "sarvamai": { "org": "Sarvam", "country": "IN" }
   }
