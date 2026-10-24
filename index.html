@@ -54,6 +54,7 @@ const COLS = [
   { k:'product',   label:'Product', tip:"Model family, parsed from the Hugging Face model name.\nClick a cell to open the model page on Hugging Face." },
   { k:'version',   label:'Ver', hue:'new', scale:(v, m) => m.ver_t, tip:"Version number parsed from the name.\nShading: newest version in its family is strongest, then the previous two fainter." },
   { k:'variant',   label:'Variant', tip:"Everything else in the name: size tag, Instruct, Base, Thinking, Coder, etc." },
+  { k:'composite', label:'Score',      n:1, hue:'score', scale:v => clamp01((v - 15) / 80), fmt:num(0), tip:"Composite of all available intelligence scores.\nEach score (Intel, Coding, Agentic, ECI, GPQA, SWE-V) is turned into a percentile rank among all models that have it, then the ranks are averaged over whichever scores a model has. 0-100; 50 = typical scored model.\nModels with only one score are less reliable. Sort by this column for a quick overall ranking." },
   { k:'aa_intel',  label:'Intel',      n:1, hue:'score', scale:v => clamp01((v - 5) / 60), fmt:num(0), tip:"Artificial Analysis Intelligence Index.\nComposite of many evals, roughly 0-70 for current models. Higher is better.\nOnly models Artificial Analysis lists and we could match by name." },
   { k:'aa_coding', label:'Coding',     n:1, hue:'score', scale:v => clamp01((v - 5) / 60), fmt:num(0), tip:"Artificial Analysis Coding Index.\nComposite of coding evals (e.g. Terminal-Bench, SciCode). Higher is better." },
   { k:'aa_agentic',label:'Agentic',    n:1, hue:'score', scale:v => clamp01((v - 5) / 60), fmt:num(0), tip:"Artificial Analysis Agentic Index.\nComposite of agentic tool-use evals. Higher is better." },
@@ -99,6 +100,18 @@ function addVersionRank(list) {
 
 let info = '', models = [], orgs = {}, countries = {}, sort = [];
 const $ = id => document.getElementById(id);
+
+// Percentile rank per score column across all models, averaged over the scores a model has.
+function addComposite(list) {
+  const ranks = SCORE_KEYS.map(k => {
+    const vals = list.map(m => m[k]).filter(v => v != null).sort((a, b) => a - b);
+    return v => { let lo = 0, hi = vals.length; while (lo < hi) { const mid = (lo + hi) >> 1; if (vals[mid] < v) lo = mid + 1; else hi = mid; } let e = lo; while (e < vals.length && vals[e] === v) e++; return 100 * ((lo + e) / 2) / vals.length; };
+  });
+  for (const m of list) {
+    const r = SCORE_KEYS.map((k, i) => m[k] != null ? ranks[i](m[k]) : null).filter(x => x != null);
+    m.composite = r.length ? r.reduce((a, b) => a + b, 0) / r.length : null;
+  }
+}
 
 function cmp(a, b, k, dir) {
   const x = a[k], y = b[k];
@@ -155,6 +168,7 @@ Promise.all([fetch('data/models.json').then(r => r.json()), fetch('data/orgs.jso
   info = `updated ${d.generated.slice(0, 10)} · Hugging Face + OpenRouter · scores: Artificial Analysis (artificialanalysis.ai), Epoch AI (epoch.ai, CC BY) · memory is weights only (add KV cache) · Active B = MoE active params when named in the model ID`;
   ['f-scored', 'f-recent'].forEach(id => $(id).addEventListener('change', render));
   addVersionRank(models);
+  addComposite(models);
   render();
 }).catch(() => { $('status').textContent = 'Could not load data'; });
 </script>
