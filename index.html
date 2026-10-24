@@ -24,18 +24,27 @@
   td.link:hover { box-shadow:inset 0 0 0 100px rgba(0,0,0,.10); }
   @media (prefers-color-scheme: dark) { td.link:hover { box-shadow:inset 0 0 0 100px rgba(255,255,255,.14); } }
   .mute { color:var(--mute); }
-  .status { padding:2px 8px; background:var(--head); border-top:1px solid var(--grid); color:var(--mute); font-size:11px; }
+  .status { padding:2px 8px; background:var(--head); border-top:1px solid var(--grid); color:var(--mute); font-size:11px; display:flex; flex-wrap:wrap; gap:0 14px; align-items:center; }
+  .status label { color:var(--fg); cursor:pointer; white-space:nowrap; }
+  .status input { margin:0 4px 0 0; vertical-align:-2px; }
 </style>
 </head>
 <body>
 <div class="wrap"><table><thead><tr id="head"></tr></thead><tbody id="body"></tbody></table></div>
-<div class="status" id="status">Loading…</div>
+<div class="status">
+  <label><input type="checkbox" id="f-scored" checked>Hide models with no scores</label>
+  <label><input type="checkbox" id="f-recent" checked>Hide models older than 16 months</label>
+  <span id="status">Loading…</span>
+</div>
 
 <script>
 const num = (d) => v => v == null ? '' : v.toFixed(d);
 const clamp01 = t => Math.min(1, Math.max(0, t));
 const log = (lo, hi) => v => clamp01((Math.log(v) - Math.log(lo)) / (Math.log(hi) - Math.log(lo)));
 const NOW = Date.now();
+const SCORE_KEYS = ['aa_intel', 'aa_coding', 'aa_agentic', 'epoch_eci', 'epoch_gpqa', 'epoch_swe'];
+const hasScore = m => SCORE_KEYS.some(k => m[k] != null);
+const cutoff = (() => { const d = new Date(NOW); d.setMonth(d.getMonth() - 16); return d.toISOString().slice(0, 10); })();
 const recent = v => clamp01(1 - (NOW - Date.parse(v)) / (365 * 864e5)); // today = 1, a year ago = 0
 const COLS = [
   { k:'country',   label:'Country' },
@@ -89,7 +98,7 @@ function addVersionRank(list) {
   }
 }
 
-let models = [], orgs = {}, countries = {}, sort = [];
+let info = '', models = [], orgs = {}, countries = {}, sort = [];
 const $ = id => document.getElementById(id);
 
 function cmp(a, b, k, dir) {
@@ -102,10 +111,12 @@ function cmp(a, b, k, dir) {
 
 function render() {
   const keys = [...sort, ...DEFAULT_SORT];
-  const rows = models.slice().sort((a, b) => {
+  const hideUnscored = $('f-scored').checked, hideOld = $('f-recent').checked;
+  const rows = models.filter(m => (!hideUnscored || hasScore(m)) && (!hideOld || !m.created || m.created >= cutoff)).sort((a, b) => {
     for (const [k, d] of keys) { const r = cmp(a, b, k, d); if (r) return r; }
     return 0;
   });
+  $('status').textContent = `${rows.length} of ${models.length} models · ${info}`;
   const sk = sort[0] && sort[0][0], sd = sort[0] && sort[0][1];
   $('head').innerHTML = COLS.map(c =>
     `<th data-k="${c.k}" class="${c.n ? 'n' : ''} ${c.k === sk ? 'sorted' : ''}" title="${c.tip || ''}">${c.label}${c.k === sk ? (sd > 0 ? ' ▲' : ' ▼') : ''}</th>`).join('');
@@ -130,7 +141,8 @@ Promise.all([fetch('data/models.json').then(r => r.json()), fetch('data/orgs.jso
   countries = o.countries;
   for (const v of Object.values(o.orgs)) orgs[v.org] = v.color;
   models = d.models.map(m => ({ ...m, fp16: m.params_b * 2, q8: m.params_b, q4: m.params_b * 0.57 }));
-  $('status').textContent = `${models.length} models · updated ${d.generated.slice(0, 10)} · Hugging Face + OpenRouter · scores: Artificial Analysis (artificialanalysis.ai), Epoch AI (epoch.ai, CC BY) · memory is weights only (add KV cache) · Active B = MoE active params when named in the model ID`;
+  info = `updated ${d.generated.slice(0, 10)} · Hugging Face + OpenRouter · scores: Artificial Analysis (artificialanalysis.ai), Epoch AI (epoch.ai, CC BY) · memory is weights only (add KV cache) · Active B = MoE active params when named in the model ID`;
+  ['f-scored', 'f-recent'].forEach(id => $(id).addEventListener('change', render));
   addVersionRank(models);
   render();
 }).catch(() => { $('status').textContent = 'Could not load data'; });
