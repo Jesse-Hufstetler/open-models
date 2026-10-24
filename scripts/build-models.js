@@ -66,6 +66,60 @@ function parseName(name, author, orgName) {
   return { product, version, variant, active_b: activeTok ? parseFloat(activeTok.slice(1)) : null };
 }
 
+const EPOCH = path.join(__dirname, '..', 'data', 'epoch.json');
+const normV = s => norm(s.replace(/_[a-z0-9]+$/i, '')); // Epoch model_version ends in _<effort>, e.g. _xhigh
+
+function parseCsv(text) {
+  const rows = [];
+  let row = [], field = '', q = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (q) {
+      if (c === '"' && text[i + 1] === '"') { field += '"'; i++; }
+      else if (c === '"') q = false;
+      else field += c;
+    } else if (c === '"') q = true;
+    else if (c === ',') { row.push(field); field = ''; }
+    else if (c === '\n' || c === '\r') {
+      if (c === '\r' && text[i + 1] === '\n') i++;
+      row.push(field); field = '';
+      if (row.length > 1 || row[0]) rows.push(row);
+      row = [];
+    } else field += c;
+  }
+  if (field || row.length) { row.push(field); rows.push(row); }
+  const head = rows.shift();
+  return rows.map(r => Object.fromEntries(head.map((h, i) => [h, r[i]])));
+}
+
+// Epoch publishes one ZIP of CSVs (CC BY). The workflow downloads it to EPOCH_DIR; we keep the columns we use.
+function loadEpoch() {
+  let prev = null;
+  try { prev = JSON.parse(fs.readFileSync(EPOCH, 'utf8')); } catch (e) {}
+  const dir = process.env.EPOCH_DIR;
+  if (!dir) { console.log('Epoch: no download, using cached scores'); return prev; }
+  try {
+    const read = f => parseCsv(fs.readFileSync(path.join(dir, f), 'utf8'));
+    const pick = (rows, nameKey, valKey, scale) => rows
+      .map(r => ({ name: r[nameKey], v: parseFloat(r[valKey]) * scale }))
+      .filter(r => r.name && isFinite(r.v));
+    const out = {
+      fetched: new Date().toISOString(),
+      source: 'Epoch AI (CC BY 4.0)',
+      eci: pick(read('epoch_capabilities_index/eci_scores.csv'), 'Display name', 'eci', 1),
+      gpqa: pick(read('gpqa_diamond.csv'), 'Model version', 'mean_score', 100),
+      swe: pick(read('swe_bench_verified.csv'), 'Model version', 'mean_score', 100),
+    };
+    if (!out.eci.length) throw new Error('no ECI rows');
+    fs.writeFileSync(EPOCH, JSON.stringify(out, null, 1));
+    console.log('Epoch: ' + out.eci.length + ' ECI, ' + out.gpqa.length + ' GPQA, ' + out.swe.length + ' SWE-bench rows');
+    return out;
+  } catch (e) {
+    console.warn('Epoch parse failed, keeping cached scores:', e.message);
+    return prev;
+  }
+}
+
 async function loadAa() {
   let prev = null;
   try { prev = JSON.parse(fs.readFileSync(SCORES, 'utf8')); } catch (e) {}
@@ -127,7 +181,18 @@ async function main() {
       if (m.intelligence != null && (!aaByName[k] || m.intelligence > aaByName[k].intelligence)) aaByName[k] = m;
     }
   }
-  let aaMatched = 0;
+  const epoch = loadEpoch();
+  const ep = { eci: {}, gpqa: {}, swe: {} };
+  if (epoch) {
+    for (const k of Object.keys(ep)) {
+      for (const r of epoch[k] || []) {
+        const n = normV(r.name);
+        if (ep[k][n] == null || r.v > ep[k][n]) ep[k][n] = r.v;
+      }
+    }
+  }
+  const r1 = v => v == null ? null : Math.round(v * 10) / 10;
+  let aaMatched = 0, epochMatched = 0;
 
   const orByHf = {};
   for (const m of or.data || []) {
@@ -149,6 +214,8 @@ async function main() {
       const license = (m.tags.find(t => t.startsWith('license:')) || '').slice(8) || null;
       const a = aaByName[norm(name)];
       if (a) aaMatched++;
+      const en = normV(name), eci = ep.eci[en];
+      if (eci != null) epochMatched++;
       models.push({
         id: m.id,
         country: org.country,
@@ -164,6 +231,9 @@ async function main() {
         aa_coding: a ? a.coding : null,
         aa_agentic: a ? a.agentic : null,
         aa_tps: a ? a.tps : null,
+        epoch_eci: r1(eci),
+        epoch_gpqa: r1(ep.gpqa[en]),
+        epoch_swe: r1(ep.swe[en]),
         context: o ? o.context_length : null,
         price_in: o ? Number(o.pricing.prompt) * 1e6 : null,
         price_out: o ? Number(o.pricing.completion) * 1e6 : null,
@@ -172,6 +242,7 @@ async function main() {
   });
 
   if (aa) console.log('AA: matched ' + aaMatched + ' of ' + aa.models.length + ' AA models to rows');
+  if (epoch) console.log('Epoch: matched ' + epochMatched + ' ECI rows to models');
   if (models.length < 20) throw new Error('suspiciously few models: ' + models.length);
 
   // Only rewrite when the data changed, so the Action doesn't commit noise.

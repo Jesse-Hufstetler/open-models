@@ -16,10 +16,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: Download Epoch benchmark data
+        continue-on-error: true
+        run: |
+          curl -fsSL -o /tmp/epoch.zip https://epoch.ai/data/benchmark_data.zip
+          unzip -q /tmp/epoch.zip -d /tmp/epoch
       - run: node scripts/build-models.js
         continue-on-error: true
         env:
           AA_API_KEY: ${{ secrets.AA_API_KEY }}
+          EPOCH_DIR: /tmp/epoch
       - name: Commit if changed
         continue-on-error: true
         run: |

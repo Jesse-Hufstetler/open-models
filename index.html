@@ -46,6 +46,9 @@ const COLS = [
   { k:'aa_intel',  label:'Intel',      n:1, hue:'score', scale:v => clamp01((v - 5) / 60), fmt:num(0), tip:'Artificial Analysis Intelligence Index' },
   { k:'aa_coding', label:'Coding',     n:1, hue:'score', scale:v => clamp01((v - 5) / 60), fmt:num(0), tip:'Artificial Analysis Coding Index' },
   { k:'aa_agentic',label:'Agentic',    n:1, hue:'score', scale:v => clamp01((v - 5) / 60), fmt:num(0), tip:'Artificial Analysis Agentic Index' },
+  { k:'epoch_eci', label:'ECI',        n:1, hue:'score', scale:v => clamp01((v - 110) / 55), fmt:num(0), tip:'Epoch Capabilities Index (composite of many benchmarks)' },
+  { k:'epoch_gpqa',label:'GPQA',       n:1, hue:'score', scale:v => clamp01((v - 30) / 65), fmt:num(0), tip:'GPQA Diamond, % (Epoch AI)' },
+  { k:'epoch_swe', label:'SWE-V',      n:1, hue:'score', scale:v => clamp01((v - 20) / 70), fmt:num(0), tip:'SWE-bench Verified, % (Epoch AI)' },
   { k:'params_b',  label:'Params B',   n:1, hue:'size', scale:log(0.1, 1000), fmt:v => v < 10 ? v.toFixed(2) : v.toFixed(1) },
   { k:'active_b',  label:'Active B',   n:1, hue:'size', scale:log(0.1, 1000), fmt:v => v == null ? '' : v },
   { k:'fp16',      label:'FP16 GB',    n:1, hue:'size', scale:log(0.1, 1000), fmt:num(1), tip:'weights only, 2 bytes/param' },
@@ -127,7 +130,7 @@ Promise.all([fetch('data/models.json').then(r => r.json()), fetch('data/orgs.jso
   countries = o.countries;
   for (const v of Object.values(o.orgs)) orgs[v.org] = v.color;
   models = d.models.map(m => ({ ...m, fp16: m.params_b * 2, q8: m.params_b, q4: m.params_b * 0.57 }));
-  $('status').textContent = `${models.length} models · updated ${d.generated.slice(0, 10)} · Hugging Face + OpenRouter · scores: Artificial Analysis (artificialanalysis.ai) · memory is weights only (add KV cache) · Active B = MoE active params when named in the model ID`;
+  $('status').textContent = `${models.length} models · updated ${d.generated.slice(0, 10)} · Hugging Face + OpenRouter · scores: Artificial Analysis (artificialanalysis.ai), Epoch AI (epoch.ai, CC BY) · memory is weights only (add KV cache) · Active B = MoE active params when named in the model ID`;
   addVersionRank(models);
   render();
 }).catch(() => { $('status').textContent = 'Could not load data'; });
