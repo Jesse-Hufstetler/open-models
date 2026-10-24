@@ -19,8 +19,10 @@
   th { position:sticky; top:0; z-index:2; background:var(--head); font-weight:600; text-align:left; cursor:pointer; user-select:none; border-top:1px solid var(--grid); }
   th.n { text-align:right; }
   th.sorted { color:var(--accent); }
-  td a { color:inherit; text-decoration:none; }
-  td a:hover { color:var(--accent); text-decoration:underline; }
+  td.link { padding:0; cursor:pointer; }
+  td.link a { display:block; padding:1px 5px; color:inherit; text-decoration:none; }
+  td.link:hover { box-shadow:inset 0 0 0 100px rgba(0,0,0,.10); }
+  @media (prefers-color-scheme: dark) { td.link:hover { box-shadow:inset 0 0 0 100px rgba(255,255,255,.14); } }
   .mute { color:var(--mute); }
   .status { padding:2px 8px; background:var(--head); border-top:1px solid var(--grid); color:var(--mute); font-size:11px; }
 </style>
@@ -111,7 +113,7 @@ function render() {
     else if (c.k === 'org') { style = tint(orgs[m.org], 16); html = m.org; }
     else if (c.k === 'product') { style = tint(orgs[m.org], 16); html = `<a href="https://huggingface.co/${m.id}" target="_blank" rel="noopener">${m.product}</a>`; }
     else { html = c.fmt ? (v == null ? '' : c.fmt(v)) : (v ?? ''); if (c.hue && v != null && v !== '') style = heat(c.hue, c.scale(v, m)); }
-    return `<td class="${c.n ? 'n' : ''}" style="${style}">${html}</td>`;
+    return `<td class="${c.n ? 'n' : ''}${c.k === 'product' ? ' link' : ''}" style="${style}">${html}</td>`;
   }).join('') + '</tr>').join('');
   document.querySelectorAll('th[data-k]').forEach(th => th.onclick = () => {
     const k = th.dataset.k;
