@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Open Models</title>
+<style>
+  :root { --bg:#fff; --fg:#111; --mute:#6b7280; --grid:#d4d4d8; --head:#ececee; --gutter:#f4f4f5; --accent:#2563eb; --size:234,88,12; --pop:37,99,235; --new:22,163,74; --cost:147,51,234; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#16181c; --fg:#e6e6e6; --mute:#9aa0a6; --grid:#33373d; --head:#23262b; --gutter:#1d2025; --accent:#6ea8fe; --size:251,146,60; --pop:96,165,250; --new:74,222,128; --cost:192,132,252; }
+  }
+  * { box-sizing:border-box; }
+  html, body { height:100%; margin:0; }
+  body { background:var(--bg); color:var(--fg); font:12px/1.15 "Segoe UI", system-ui, sans-serif; display:flex; flex-direction:column; }
+  .wrap { flex:1; overflow:auto; }
+  table { border-collapse:separate; border-spacing:0; }
+  th, td { padding:1px 5px; border-right:1px solid var(--grid); border-bottom:1px solid var(--grid); white-space:nowrap; font-variant-numeric:tabular-nums; }
+  td.n { text-align:right; }
+  th { position:sticky; top:0; z-index:2; background:var(--head); font-weight:600; text-align:left; cursor:pointer; user-select:none; border-top:1px solid var(--grid); }
+  th.n { text-align:right; }
+  th.sorted { color:var(--accent); }
+  td a { color:inherit; text-decoration:none; }
+  td a:hover { color:var(--accent); text-decoration:underline; }
+  .mute { color:var(--mute); }
+  .status { padding:2px 8px; background:var(--head); border-top:1px solid var(--grid); color:var(--mute); font-size:11px; }
+</style>
+</head>
+<body>
+<div class="wrap"><table><thead><tr id="head"></tr></thead><tbody id="body"></tbody></table></div>
+<div class="status" id="status">Loading…</div>
+
+<script>
+const num = (d) => v => v == null ? '' : v.toFixed(d);
+const clamp01 = t => Math.min(1, Math.max(0, t));
+const log = (lo, hi) => v => clamp01((Math.log(v) - Math.log(lo)) / (Math.log(hi) - Math.log(lo)));
+const NOW = Date.now();
+const recent = v => clamp01(1 - (NOW - Date.parse(v)) / (365 * 864e5)); // today = 1, a year ago = 0
+const COLS = [
+  { k:'country',   label:'Country' },
+  { k:'org',       label:'Org' },
+  { k:'product',   label:'Product' },
+  { k:'version',   label:'Ver', hue:'new', scale:(v, m) => m.ver_t, tip:'newest version of its product line = strongest' },
+  { k:'variant',   label:'Variant' },
+  { k:'params_b',  label:'Params B',   n:1, hue:'size', scale:log(0.1, 1000), fmt:v => v < 10 ? v.toFixed(2) : v.toFixed(1) },
+  { k:'active_b',  label:'Active B',   n:1, hue:'size', scale:log(0.1, 1000), fmt:v => v == null ? '' : v },
+  { k:'fp16',      label:'FP16 GB',    n:1, hue:'size', scale:log(0.1, 1000), fmt:num(1), tip:'weights only, 2 bytes/param' },
+  { k:'q8',        label:'Q8 GB',      n:1, hue:'size', scale:log(0.1, 1000), fmt:num(1), tip:'weights only, 1 byte/param' },
+  { k:'q4',        label:'Q4 GB',      n:1, hue:'size', scale:log(0.1, 1000), fmt:num(1), tip:'weights only, ~0.57 bytes/param' },
+  { k:'context',   label:'Context',    n:1, hue:'size', scale:log(4096, 1048576), fmt:v => v == null ? '' : (v >= 1024 ? Math.round(v / 1024) + 'K' : v) },
+  { k:'price_in',  label:'$/M in',     n:1, hue:'cost', scale:log(0.05, 20), fmt:num(2) },
+  { k:'price_out', label:'$/M out',    n:1, hue:'cost', scale:log(0.05, 20), fmt:num(2) },
+  { k:'downloads', label:'Downloads',  n:1, hue:'pop', scale:log(1e3, 3e7), fmt:v => v.toLocaleString() },
+  { k:'likes',     label:'Likes',      n:1, hue:'pop', scale:log(10, 5000), fmt:v => v.toLocaleString() },
+  { k:'license',   label:'License' },
+  { k:'created',   label:'Created',    hue:'new', scale:recent },
+  { k:'updated',   label:'Updated',    hue:'new', scale:recent },
+];
+const DEFAULT_SORT = [['country',1],['org',1],['product',1],['version',-1],['params_b',-1]];
+const tint = (c, pct) => c ? `background:color-mix(in srgb, ${c} ${pct}%, transparent)` : '';
+// Boring values (low t) get no color; only the high end gets noticeable.
+const heat = (hue, t) => t < 0.12 ? '' : `background:rgba(var(--${hue}), ${(0.05 + 0.5 * t * t).toFixed(2)})`;
+
+// Rank each version within its own org + product line (and letter prefix, so DeepSeek V and R series don't compete).
+function addVersionRank(list) {
+  const parse = v => { const m = String(v).match(/^([a-z]?)(\d+(?:\.\d+)*)$/i); return m && { p:m[1].toLowerCase(), n:m[2].split('.').map(Number) }; };
+  const diff = (a, b) => { for (let i = 0; i < Math.max(a.length, b.length); i++) { const d = (a[i] || 0) - (b[i] || 0); if (d) return d; } return 0; };
+  const groups = {};
+  for (const m of list) {
+    const p = m.version && parse(m.version);
+    if (!p) continue;
+    (groups[m.org + '|' + m.product + '|' + p.p] ||= new Map()).set(m.version, p.n);
+  }
+  for (const g of Object.keys(groups)) {
+    const order = [...groups[g].entries()].sort((a, b) => diff(b[1], a[1])).map(e => e[0]);
+    groups[g] = order;
+  }
+  const T = [1, 0.5, 0.25];
+  for (const m of list) {
+    const p = m.version && parse(m.version);
+    m.ver_t = p ? (T[groups[m.org + '|' + m.product + '|' + p.p].indexOf(m.version)] || 0) : 0;
+  }
+}
+
+let models = [], orgs = {}, countries = {}, sort = [];
+const $ = id => document.getElementById(id);
+
+function cmp(a, b, k, dir) {
+  const x = a[k], y = b[k];
+  if (x == null || x === '') return y == null || y === '' ? 0 : 1;
+  if (y == null || y === '') return -1;
+  const r = typeof x === 'number' ? x - y : String(x).localeCompare(String(y), undefined, { numeric:true, sensitivity:'base' });
+  return r * dir;
+}
+
+function render() {
+  const keys = [...sort, ...DEFAULT_SORT];
+  const rows = models.slice().sort((a, b) => {
+    for (const [k, d] of keys) { const r = cmp(a, b, k, d); if (r) return r; }
+    return 0;
+  });
+  const sk = sort[0] && sort[0][0], sd = sort[0] && sort[0][1];
+  $('head').innerHTML = COLS.map(c =>
+    `<th data-k="${c.k}" class="${c.n ? 'n' : ''} ${c.k === sk ? 'sorted' : ''}" title="${c.tip || ''}">${c.label}${c.k === sk ? (sd > 0 ? ' ▲' : ' ▼') : ''}</th>`).join('');
+  $('body').innerHTML = rows.map(m => '<tr>' + COLS.map(c => {
+    const v = m[c.k];
+    let style = '', html;
+    if (c.k === 'country') { style = tint(countries[m.country]?.color, 16); html = `<span title="${countries[m.country]?.name || ''}">${m.country}</span>`; }
+    else if (c.k === 'org') { style = tint(orgs[m.org], 16); html = m.org; }
+    else if (c.k === 'product') { style = tint(orgs[m.org], 16); html = `<a href="https://huggingface.co/${m.id}" target="_blank" rel="noopener">${m.product}</a>`; }
+    else { html = c.fmt ? (v == null ? '' : c.fmt(v)) : (v ?? ''); if (c.hue && v != null && v !== '') style = heat(c.hue, c.scale(v, m)); }
+    return `<td class="${c.n ? 'n' : ''}" style="${style}">${html}</td>`;
+  }).join('') + '</tr>').join('');
+  document.querySelectorAll('th[data-k]').forEach(th => th.onclick = () => {
+    const k = th.dataset.k;
+    const first = COLS.find(c => c.k === k).n ? -1 : 1;
+    sort = [[k, sk === k ? -sd : first]];
+    render();
+  });
+}
+
+Promise.all([fetch('data/models.json').then(r => r.json()), fetch('data/orgs.json').then(r => r.json())]).then(([d, o]) => {
+  countries = o.countries;
+  for (const v of Object.values(o.orgs)) orgs[v.org] = v.color;
+  models = d.models.map(m => ({ ...m, fp16: m.params_b * 2, q8: m.params_b, q4: m.params_b * 0.57 }));
+  $('status').textContent = `${models.length} models · updated ${d.generated.slice(0, 10)} · Hugging Face + OpenRouter · memory is weights only (add KV cache) · Active B = MoE active params when named in the model ID`;
+  addVersionRank(models);
+  render();
+}).catch(() => { $('status').textContent = 'Could not load data'; });
+</script>
+</body>
+</html>
