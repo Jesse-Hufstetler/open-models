@@ -22,7 +22,7 @@
     "01-ai": { "org": "01.AI", "country": "CN" },
     "baidu": { "org": "Baidu", "country": "CN", "color": "#2932e1" },
     "internlm": { "org": "Shanghai AI Lab", "country": "CN" },
-    "ByteDance-Seed": { "org": "ByteDance", "country": "CN" },
+    "ByteDance-Seed": { "org": "ByteDance", "country": "CN", "color": "#325ab4" },
     "XiaomiMiMo": { "org": "Xiaomi", "country": "CN", "color": "#ff6900" },
     "inclusionAI": { "org": "Ant Group", "country": "CN", "color": "#1677ff" },
     "meituan-longcat": { "org": "Meituan", "country": "CN", "color": "#ffd100" },
