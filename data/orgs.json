@@ -48,6 +48,6 @@
     "CohereLabs": { "org": "Cohere", "country": "CA" },
     "tiiuae": { "org": "TII", "country": "AE", "color": "#6a00f4", "aliases": ["Technology Innovation Institute"] },
     "swiss-ai": { "org": "Swiss AI", "country": "CH" },
-    "sarvamai": { "org": "Sarvam", "country": "IN" }
+    "sarvamai": { "org": "Sarvam", "country": "IN", "color": "#f97316" }
   }
 }
