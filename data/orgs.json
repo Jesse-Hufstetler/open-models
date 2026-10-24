@@ -17,7 +17,7 @@
     "moonshotai": { "org": "Moonshot", "country": "CN", "color": "#1783ff" },
     "MiniMaxAI": { "org": "MiniMax", "country": "CN", "color": "#f23f5d" },
     "tencent": { "org": "Tencent", "country": "CN", "color": "#0052d9" },
-    "openbmb": { "org": "OpenBMB", "country": "CN" },
+    "openbmb": { "org": "OpenBMB", "country": "CN", "color": "#3a5cf5" },
     "stepfun-ai": { "org": "StepFun", "country": "CN", "color": "#005aff" },
     "01-ai": { "org": "01.AI", "country": "CN" },
     "baidu": { "org": "Baidu", "country": "CN", "color": "#2932e1" },
