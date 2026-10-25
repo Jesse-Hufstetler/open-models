@@ -17,13 +17,16 @@
   table { border-collapse:separate; border-spacing:0; }
   th, td { padding:1px 5px; border-right:1px solid var(--grid); border-bottom:1px solid var(--grid); white-space:nowrap; font-variant-numeric:tabular-nums; }
   td.n { text-align:right; }
-  th { position:sticky; top:0; z-index:2; background:var(--head); font-weight:600; text-align:left; cursor:pointer; user-select:none; border-top:1px solid var(--grid); }
+  th { vertical-align:bottom; position:sticky; top:0; z-index:2; background:var(--head); font-weight:600; text-align:left; cursor:pointer; user-select:none; border-top:1px solid var(--grid); border-bottom:4px solid var(--grid); }
   th.n { text-align:right; }
   th.sorted { color:var(--accent); }
   td.link { padding:0; cursor:pointer; }
   td.link a { display:block; padding:1px 5px; color:inherit; text-decoration:none; }
   td.id-cell div { display:flex; align-items:center; }
-  td.id-cell a { flex:1; }
+  td.id-cell a { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; direction:rtl; text-align:left; }
+  td.id-cell a span { direction:ltr; unicode-bidi:isolate; }
+  td.id-cell .cp { flex:none; }
+  td.var span { display:block; overflow:hidden; text-overflow:ellipsis; }
   .cp { all:unset; cursor:pointer; box-sizing:border-box; margin:0 3px; width:16px; height:14px; line-height:12px; text-align:center; font-size:11px; border:1px solid var(--grid); border-radius:3px; opacity:.55; }
   .cp:hover { opacity:1; background:rgba(128,128,128,.25); }
   td.link:hover { box-shadow:inset 0 0 0 100px rgba(0,0,0,.10); }
@@ -31,12 +34,19 @@
   td.id-cell a:hover { box-shadow:inset 0 0 0 100px rgba(0,0,0,.10); }
   @media (prefers-color-scheme: dark) { td.link:hover, td.id-cell a:hover { box-shadow:inset 0 0 0 100px rgba(255,255,255,.14); } td.id-cell:hover { box-shadow:none; } }
   #tip { position:fixed; z-index:10; max-width:340px; padding:6px 8px; background:#111; color:#eee; border:1px solid #555; border-radius:3px; font-size:12px; line-height:1.3; white-space:pre-line; pointer-events:none; box-shadow:0 3px 10px rgba(0,0,0,.4); display:none; }
-  .tg { margin-left:4px; padding:0 3px; border:1px solid var(--grid); border-radius:2px; color:var(--accent); }
-  .tg:hover { background:var(--accent); color:var(--bg); }
+  th .short { display:none; }
+  th.slim .full { display:none; }
+  th.slim .short { display:inline; }
+  th.slim .lbl { writing-mode:vertical-rl; transform:rotate(180deg); display:inline-block; }
+  th.slim { vertical-align:bottom; text-align:center; padding:3px 2px; }
+  th.slim .tg { display:block; margin:4px auto 0; width:fit-content; }
+  th.bd { background:color-mix(in srgb, var(--accent) 22%, var(--head)); border-bottom-color:var(--accent); }
+  .tg { display:inline-block; margin-left:5px; padding:0 6px; border:1px solid var(--accent); border-radius:9px; background:var(--accent); color:var(--bg); font-size:11px; font-weight:700; line-height:14px; vertical-align:1px; box-shadow:0 0 0 2px color-mix(in srgb, var(--accent) 30%, transparent), 0 1px 3px rgba(0,0,0,.35); }
+  .tg:hover { filter:brightness(1.2); box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 45%, transparent), 0 1px 4px rgba(0,0,0,.4); }
   .status a { color:var(--accent); }
   td.c, th.c { text-align:center; }
   .mute { color:var(--mute); }
-  .status { padding:2px 8px; background:var(--head); border-top:1px solid var(--grid); color:var(--mute); font-size:11px; display:flex; flex-wrap:wrap; gap:0 14px; align-items:center; }
+  .status { padding:2px 8px; background:var(--head); border-top:4px solid var(--grid); color:var(--mute); font-size:11px; display:flex; flex-wrap:wrap; gap:0 14px; align-items:center; }
   .status label { color:var(--fg); cursor:pointer; white-space:nowrap; }
   .status input[type=number] { margin:0 2px; vertical-align:baseline; background:var(--bg); color:var(--fg); border:1px solid var(--grid); }
   .status input { margin:0 4px 0 0; vertical-align:-2px; }
@@ -85,6 +95,7 @@ const hasScore = m => SCORE_KEYS.some(k => m[k] != null);
 const recent = v => clamp01(1 - (NOW - Date.parse(v)) / (365 * 864e5)); // today = 1, a year ago = 0
 const CENTER = new Set(['country', 'version', 'composite', ...SCORE_KEYS, 'params_b', 'active_b', 'q4']);
 const BREAKDOWN = new Set(SCORE_KEYS);
+const SLIM = new Set(['composite', ...SCORE_KEYS, 'params_b', 'active_b', 'q4', 'context']); // headers turn sideways when the table runs out of room
 let showBreakdown = false;
 const COLS = [
   { k:'id',        label:'Hugging Face name', tip:"Full Hugging Face repo name (author/model), the 'big ugly name' chatbots use.\nClick to open the model page." },
@@ -248,18 +259,20 @@ function render() {
   const sk = sort[0] && sort[0][0], sd = sort[0] && sort[0][1];
   const cols = COLS.filter(c => showBreakdown || !BREAKDOWN.has(c.k));
   $('head').innerHTML = cols.map(c =>
-    `<th data-k="${c.k}" class="${c.n ? 'n' : ''} ${CENTER.has(c.k) ? 'c' : ''} ${c.k === sk ? 'sorted' : ''}" data-tip="${(c.tip || '').replace(/"/g, '&quot;')}">${c.label}${c.k === sk ? (sd > 0 ? ' ▲' : ' ▼') : ''}${c.k === 'composite' ? `<span class="tg" data-tip="${showBreakdown ? 'Hide' : 'Show'} the individual scores behind this one">${showBreakdown ? '◂' : '▸'}</span>` : ''}</th>`).join('');
+    `<th data-k="${c.k}" class="${c.n ? 'n' : ''} ${CENTER.has(c.k) ? 'c' : ''} ${c.k === sk ? 'sorted' : ''} ${BREAKDOWN.has(c.k) ? 'bd' : ''}" data-tip="${(c.tip || '').replace(/"/g, '&quot;')}">${c.k === 'country' ? '<span class="full">Country</span><span class="short">Ctry</span>' : SLIM.has(c.k) ? `<span class="lbl">${c.label}${c.k === sk ? (sd > 0 ? ' ▲' : ' ▼') : ''}</span>` : c.label}${SLIM.has(c.k) || c.k === 'country' ? '' : c.k === sk ? (sd > 0 ? ' ▲' : ' ▼') : ''}${c.k === 'composite' ? `<span class="tg" data-tip="${showBreakdown ? 'Hide' : 'Show'} the individual scores behind this one">${showBreakdown ? '◂' : '▸'}</span>` : ''}</th>`).join('');
   $('body').innerHTML = rows.map(m => '<tr>' + cols.map(c => {
     const v = m[c.k];
     let style = '', html;
-    if (c.k === 'id') { style = tint(orgs[m.org], 16); html = `<div><a href="https://huggingface.co/${m.id}" target="_blank" rel="noopener">${m.id}</a><button class="cp" data-copy="${m.id}" data-tip="Copy &quot;${m.id}&quot; to the clipboard">⧉</button></div>`; }
+    if (c.k === 'id') { style = tint(orgs[m.org], 16); html = `<div><a href="https://huggingface.co/${m.id}" target="_blank" rel="noopener"><span>${m.id}</span></a><button class="cp" data-copy="${m.id}" data-tip="Copy &quot;${m.id}&quot; to the clipboard">⧉</button></div>`; }
     else if (c.k === 'country') { style = tint(countries[m.country]?.color, 16); html = `<span data-tip="${countries[m.country]?.name || ''}">${m.country}</span>`; }
     else if (c.k === 'org') { style = tint(orgs[m.org], 16); html = m.org; }
     else if (c.k === 'product') { style = tint(orgs[m.org], 16); html = `<a href="https://huggingface.co/${m.id}" target="_blank" rel="noopener">${m.product}</a>`; }
+    else if (c.k === 'variant') html = `<span>${v ?? ''}</span>`;
     else { html = c.fmt ? (v == null ? '' : c.fmt(v)) : (v ?? ''); if (c.hue && v != null && v !== '') style = heat(c.hue, c.scale(v, m)); }
     const tip = c.k === 'variant' ? variantTip(m).replace(/"/g, '&quot;') : '';
-    return `<td class="${c.n ? 'n' : ''}${CENTER.has(c.k) ? ' c' : ''}${c.k === 'product' ? ' link' : c.k === 'id' ? ' link id-cell' : ''}" style="${style}"${tip ? ` data-tip="${tip}"` : ''}>${html}</td>`;
+    return `<td class="${c.n ? 'n' : ''}${CENTER.has(c.k) ? ' c' : ''}${c.k === 'variant' ? ' var' : ''}${c.k === 'product' ? ' link' : c.k === 'id' ? ' link id-cell' : ''}" style="${style}"${tip ? ` data-tip="${tip}"` : ''}>${html}</td>`;
   }).join('') + '</tr>').join('');
+  fitColumns();
   try { localStorage.setItem('om-prefs', JSON.stringify({ hideUnscored, ram: +$('f-ram').value, showBreakdown, sort })); } catch (_) {}
   document.querySelectorAll('th[data-k]').forEach(th => th.onclick = e => {
     if (e.target.classList.contains('tg')) { showBreakdown = !showBreakdown; tipEl.style.display = 'none'; render(); return; }
@@ -269,6 +282,37 @@ function render() {
     render();
   });
 }
+
+// Slim the Hugging Face name (chopped on the left) and Variant (chopped on the right) before the table overflows, down to a minimum width each.
+const MIN_W = { id: 170, variant: 90 };
+function fitColumns() {
+  const wrap = document.querySelector('.wrap'), table = wrap.querySelector('table');
+  const inner = { id: 'td.id-cell > div', variant: 'td.var > span' };
+  const idx = {}, w = {};
+  [...table.querySelectorAll('th')].forEach((th, i) => { if (MIN_W[th.dataset.k]) idx[th.dataset.k] = i; });
+  const set = (k, px) => table.querySelectorAll(inner[k]).forEach(el => { el.style.maxWidth = px == null ? '' : px + 'px'; });
+  for (const k in inner) set(k, null);
+  // Slimming order: the name and Variant columns first, then headers go sideways in stages (Country, the score flyout, the rest).
+  // Pick the fewest sideways stages that let the name/Variant columns absorb the overflow, so no space is left unused.
+  const stages = [['country'], SCORE_KEYS, [...SLIM]];
+  const heads = [...table.querySelectorAll('th')];
+  heads.forEach(th => th.classList.remove('slim'));
+  let over = 0;
+  for (let s = 0; s <= stages.length; s++) {
+    if (s > 0) heads.forEach(th => { if (stages[s - 1].includes(th.dataset.k)) th.classList.add('slim'); });
+    for (const k in inner) set(k, null);
+    over = table.offsetWidth - wrap.clientWidth;
+    for (const k in idx) w[k] = heads[idx[k]].offsetWidth;
+    if (over <= Object.keys(idx).reduce((t, k) => t + w[k] - MIN_W[k], 0)) break;
+  }
+  for (const k of ['id', 'variant']) {
+    if (!(k in idx)) continue;
+    const cut = Math.max(0, Math.min(over + 1, w[k] - MIN_W[k]));
+    if (cut > 0) { set(k, w[k] - cut - (k === 'id' ? 0 : 11)); over -= cut; }
+  }
+  table.querySelectorAll('td.id-cell a').forEach(a => { a.dataset.tip = a.scrollWidth > a.clientWidth ? a.textContent : ''; });
+}
+window.addEventListener('resize', fitColumns);
 
 const tipEl = $('tip');
 document.addEventListener('click', e => {
