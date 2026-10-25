@@ -6,9 +6,9 @@
 <title>Open Models</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <style>
-  :root { --bg:#fff; --fg:#111; --mute:#6b7280; --grid:#d4d4d8; --head:#ececee; --gutter:#f4f4f5; --accent:#2563eb; --size:234,88,12; --pop:37,99,235; --new:22,163,74; --cost:147,51,234; --score:13,148,136; }
+  :root { --bg:#fff; --fg:#111; --mute:#6b7280; --grid:#d4d4d8; --head:#ececee; --gutter:#f4f4f5; --accent:#2563eb; --size:234,88,12; --dense:113,113,122; --pop:37,99,235; --new:22,163,74; --cost:147,51,234; --score:13,148,136; }
   @media (prefers-color-scheme: dark) {
-    :root { --bg:#16181c; --fg:#e6e6e6; --mute:#9aa0a6; --grid:#33373d; --head:#23262b; --gutter:#1d2025; --accent:#6ea8fe; --size:251,146,60; --pop:96,165,250; --new:74,222,128; --cost:192,132,252; --score:45,212,191; }
+    :root { --bg:#16181c; --fg:#e6e6e6; --mute:#9aa0a6; --grid:#33373d; --head:#23262b; --gutter:#1d2025; --accent:#6ea8fe; --size:251,146,60; --dense:160,160,170; --pop:96,165,250; --new:74,222,128; --cost:192,132,252; --score:45,212,191; }
   }
   * { box-sizing:border-box; }
   html, body { height:100%; margin:0; }
@@ -71,7 +71,7 @@
 <div class="wrap"><table><colgroup></colgroup><thead><tr id="head"></tr></thead><tbody id="body"></tbody></table></div>
 <div id="tip"></div>
 <div class="status">
-  <label data-tip="Featured: only show models that are a top 2 pick for some RAM budget.&#10;For budgets from 0.5 GB upward, the 2 best models that fit in that much Q4 RAM are kept, ranked by composite score, Intelligence Index or GPQA. Everything else is hidden."><input type="checkbox" id="f-featured" checked>Featured</label>
+  <label data-tip="Featured: only show models that are a top 2 pick for some RAM budget.&#10;For budgets from 2 GB upward, the 2 best MoE and the 2 best dense models that fit in that much Q4 RAM are kept, ranked by composite score, Intelligence Index or GPQA. Everything else is hidden."><input type="checkbox" id="f-featured" checked>Featured</label>
   <label><input type="checkbox" id="f-scored" checked>Hide models with no scores</label>
     <label>Max RAM <input type="range" id="f-ram" min="0" max="1000" value="1000" style="width:220px;vertical-align:middle"> <b id="ram-val" style="display:inline-block;min-width:70px">no limit</b></label>
   <button id="dl-open" type="button">Download data</button>
@@ -117,7 +117,7 @@ const COLS = [
   { k:'epoch_gpqa',label:'GPQA',       n:1, hue:'score', scale:v => clamp01((v - 30) / 65), fmt:num(0), tip:"GPQA Diamond accuracy, % (Epoch AI runs).\nGraduate-level science multiple choice; random guessing is 25%." },
   { k:'epoch_swe', label:'SWE-V',      n:1, hue:'score', scale:v => clamp01((v - 20) / 70), fmt:num(0), tip:"SWE-bench Verified, % solved (Epoch AI runs).\nA test of real-world software engineering: the model gets an actual bug report from a popular open-source Python project and must edit the code to fix it. A fix counts only if the project's own tests then pass. 'Verified' = 500 tasks that humans checked are solvable.\nScores depend a lot on the agent scaffold around the model, so compare with care." },
   { k:'params_b',  label:'Params B',   n:1, hue:'size', scale:log(0.1, 1000), fmt:v => v < 10 ? v.toFixed(2) : v.toFixed(1), tip:"Total parameters, in billions.\nFrom Hugging Face safetensors metadata, or the size in the model name.\nFor MoE models this is all experts, which is what must fit in memory." },
-  { k:'active_b',  label:'Active B',   n:1, hue:'size', scale:log(0.1, 1000), fmt:v => v == null ? '' : v, tip:"Parameters used per token, in billions. This drives speed.\nMoE models: only the active experts, parsed from names like A3B. Dense models: same as Params B, so you can sort MoE and dense models side by side.\nIf a MoE model does not state its active size in its name, it shows its total here.\nMemory still needs ALL params (see RAM), unless you offload experts to CPU." },
+  { k:'active_b',  label:'Active B',   n:1, hue:'size', scale:log(0.1, 1000), fmt:v => v == null ? '' : v, tip:"Parameters used per token, in billions. This drives speed.\nMoE models: only the active experts, parsed from names like A3B. Dense models: same as Params B, so you can sort MoE and dense models side by side.\nShading: orange = MoE (fewer active than total); grey = dense, or a MoE that does not state its active size.\nIf a MoE model does not state its active size in its name, it shows its total here.\nMemory still needs ALL params (see RAM), unless you offload experts to CPU." },
   { k:'q4',        label:'RAM GB (Q4)',      n:1, hue:'size', scale:log(0.1, 1000), fmt:num(1), tip:"Approximate memory to run the model at 4-bit quantization (Q4_K_M), the most common choice for local use: params x ~0.57 bytes.\nWeights only; add KV cache and overhead (10-30%+). Q8 needs about 1.75x this, FP16 about 3.5x." },
   { k:'context',   label:'Context',    n:1, hue:'size', scale:log(4096, 1048576), fmt:v => v == null ? '' : (v >= 1024 ? Math.round(v / 1024) + 'K' : v), tip:"Maximum context window in tokens, from OpenRouter.\nBlank = not listed there. KV cache for long contexts adds a lot of memory." },
   { k:'downloads', label:'Downloads',  n:1, hue:'pop', scale:log(1e3, 3e7), fmt:v => v.toLocaleString(), tip:"Hugging Face downloads over the last 30 days.\nColor is log-scaled." },
@@ -251,17 +251,20 @@ function cmp(a, b, k, dir) {
   return r * dir;
 }
 
-// Featured: the top 2 by composite, Intel or GPQA among the models that fit each RAM budget (fine steps at the small end, ~10% steps above 16 GB).
+// Featured: the top 2 MoE and top 2 dense models by composite, Intel or GPQA among those that fit each RAM budget, from 2 GB up (fine steps at the small end, ~10% steps above 16 GB).
 let featuredIds = null;
 function featuredSet() {
   if (featuredIds) return featuredIds;
   featuredIds = new Set();
-  const budgets = [0.5, 1, 2, 3, 4, 5, 6, 8, 10, 12, 14, 16];
+  const budgets = [2, 3, 4, 5, 6, 8, 10, 12, 14, 16];
   for (let b = 16 * 1.1; b < ramMax * 1.1; b *= 1.1) budgets.push(b);
   for (const b of budgets) {
     const fit = models.filter(m => m.q4 <= b);
-    for (const k of ['composite', 'aa_intel', 'epoch_gpqa'])
-      fit.filter(m => typeof m[k] === 'number').sort((x, y) => y[k] - x[k]).slice(0, 2).forEach(m => featuredIds.add(m.id));
+    for (const moe of [false, true]) {
+      const pool = fit.filter(m => (m.active_b < m.params_b) === moe);
+      for (const k of ['composite', 'aa_intel', 'epoch_gpqa'])
+        pool.filter(m => typeof m[k] === 'number').sort((x, y) => y[k] - x[k]).slice(0, 2).forEach(m => featuredIds.add(m.id));
+    }
   }
   return featuredIds;
 }
@@ -275,7 +278,7 @@ function rowHtml(m, cols) {
     else if (c.k === 'org') { style = tint(orgs[m.org], 16); html = `<span>${m.org}</span>`; }
     else if (c.k === 'product') { style = tint(orgs[m.org], 16); html = `<a href="https://huggingface.co/${m.id}" target="_blank" rel="noopener">${m.product}</a>`; }
     else if (c.k === 'variant') html = `<span>${v ?? ''}</span>`;
-    else { html = c.fmt ? (v == null ? '' : c.fmt(v)) : (v ?? ''); if (c.hue && v != null && v !== '') style = heat(c.hue, c.scale(v, m)); }
+    else { html = c.fmt ? (v == null ? '' : c.fmt(v)) : (v ?? ''); if (c.hue && v != null && v !== '') style = c.k === 'active_b' && v === m.params_b ? 'background:rgba(var(--dense), .22)' : heat(c.hue, c.scale(v, m)); }
     const tip = c.k === 'variant' ? variantTip(m).replace(/"/g, '&quot;') : '';
     return `<td class="${c.n ? 'n' : ''}${CENTER.has(c.k) ? ' c' : ''}${c.k === 'variant' ? ' var' : c.k === 'org' ? ' org' : ''}${c.k === 'product' ? ' link' : c.k === 'id' ? ' link id-cell' : ''}" style="${style}"${tip ? ` data-tip="${tip}"` : ''}>${html}</td>`;
   }).join('');
