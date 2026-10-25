@@ -13,8 +13,8 @@
   * { box-sizing:border-box; }
   html, body { height:100%; margin:0; }
   body { background:var(--bg); color:var(--fg); font:12px/1.15 "Segoe UI", system-ui, sans-serif; display:flex; flex-direction:column; }
-  .wrap { flex:1; overflow:auto; }
-  table { border-collapse:separate; border-spacing:0; }
+  .wrap { flex:1; overflow:auto; scrollbar-gutter:stable; }
+  table { border-collapse:separate; border-spacing:0; table-layout:fixed; }
   th, td { padding:1px 5px; border-right:1px solid var(--grid); border-bottom:1px solid var(--grid); white-space:nowrap; font-variant-numeric:tabular-nums; }
   td.n { text-align:right; }
   th { vertical-align:bottom; position:sticky; top:0; z-index:2; background:var(--head); font-weight:600; text-align:left; cursor:pointer; user-select:none; border-top:1px solid var(--grid); border-bottom:4px solid var(--grid); }
@@ -23,12 +23,14 @@
   td.link { padding:0; cursor:pointer; }
   td.link a { display:block; padding:1px 5px; color:inherit; text-decoration:none; }
   td.id-cell div { display:flex; align-items:center; }
-  td.id-cell a { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; direction:rtl; text-align:left; }
+  td.id-cell a { flex:1; min-width:0; overflow:hidden; direction:rtl; text-align:left; }
+  td span.cut, td.link a.cut { mask-image:linear-gradient(to left, transparent, #000 22px); }
+  td.id-cell a.cut { mask-image:linear-gradient(to right, transparent, #000 22px); }
+  td.org > span { display:block; overflow:hidden; }
+  td.link a { overflow:hidden; }
   td.id-cell a span { direction:ltr; unicode-bidi:isolate; }
   td.id-cell .cp { flex:none; }
-  td.id-cell > div { max-width:var(--id-max, none); }
-  td.var > span { max-width:var(--var-max, none); }
-  td.var span { display:block; overflow:hidden; text-overflow:ellipsis; }
+  td.var span { display:block; overflow:hidden; }
   .cp { all:unset; cursor:pointer; box-sizing:border-box; margin:0 3px; width:16px; height:14px; line-height:12px; text-align:center; font-size:11px; border:1px solid var(--grid); border-radius:3px; opacity:.55; }
   .cp:hover { opacity:1; background:rgba(128,128,128,.25); }
   td.link:hover { box-shadow:inset 0 0 0 100px rgba(0,0,0,.10); }
@@ -66,7 +68,7 @@
 </style>
 </head>
 <body>
-<div class="wrap"><table><thead><tr id="head"></tr></thead><tbody id="body"></tbody></table></div>
+<div class="wrap"><table><colgroup></colgroup><thead><tr id="head"></tr></thead><tbody id="body"></tbody></table></div>
 <div id="tip"></div>
 <div class="status">
   <label data-tip="Featured: only show models that are a top 2 pick for some RAM budget.&#10;For budgets from 0.5 GB upward, the 2 best models that fit in that much Q4 RAM are kept, ranked by composite score, Intelligence Index or GPQA. Everything else is hidden."><input type="checkbox" id="f-featured" checked>Featured</label>
@@ -264,93 +266,176 @@ function featuredSet() {
   return featuredIds;
 }
 
+function rowHtml(m, cols) {
+  return cols.map(c => {
+    const v = m[c.k];
+    let style = '', html;
+    if (c.k === 'id') { style = tint(orgs[m.org], 16); html = `<div><a href="https://huggingface.co/${m.id}" target="_blank" rel="noopener"><span>${m.id}</span></a><button class="cp" data-copy="${m.id}" data-tip="Copy &quot;${m.id}&quot; to the clipboard">⧉</button></div>`; }
+    else if (c.k === 'country') { style = tint(countries[m.country]?.color, 16); html = `<span data-tip="${countries[m.country]?.name || ''}">${m.country}</span>`; }
+    else if (c.k === 'org') { style = tint(orgs[m.org], 16); html = `<span>${m.org}</span>`; }
+    else if (c.k === 'product') { style = tint(orgs[m.org], 16); html = `<a href="https://huggingface.co/${m.id}" target="_blank" rel="noopener">${m.product}</a>`; }
+    else if (c.k === 'variant') html = `<span>${v ?? ''}</span>`;
+    else { html = c.fmt ? (v == null ? '' : c.fmt(v)) : (v ?? ''); if (c.hue && v != null && v !== '') style = heat(c.hue, c.scale(v, m)); }
+    const tip = c.k === 'variant' ? variantTip(m).replace(/"/g, '&quot;') : '';
+    return `<td class="${c.n ? 'n' : ''}${CENTER.has(c.k) ? ' c' : ''}${c.k === 'variant' ? ' var' : c.k === 'org' ? ' org' : ''}${c.k === 'product' ? ' link' : c.k === 'id' ? ' link id-cell' : ''}" style="${style}"${tip ? ` data-tip="${tip}"` : ''}>${html}</td>`;
+  }).join('');
+}
+let rowCache = { bd: null, map: new Map() };
+
+// Dragging the RAM slider only hides/shows already-built rows, so it can run every frame.
+let sliderQueued = false;
+function sliderRender() {
+  if (sliderQueued) return;
+  sliderQueued = true;
+  requestAnimationFrame(() => { sliderQueued = false; render(); });
+}
+
+const headHtml = (cols, sk, sd, all) => cols.map(c => {
+  const arrow = c.k === sk || (all && c.k !== 'country') ? (sd > 0 ? ' ▲' : ' ▼') : '';
+  return `<th data-k="${c.k}" class="${c.n ? 'n' : ''} ${CENTER.has(c.k) ? 'c' : ''} ${c.k === sk ? 'sorted' : ''} ${BREAKDOWN.has(c.k) ? 'bd' : ''}" data-tip="${(c.tip || '').replace(/"/g, '&quot;')}">${c.k === 'country' ? '<span class="full">Country</span><span class="short">Ctry</span>' : SLIM.has(c.k) ? `<span class="lbl">${c.label}${arrow}</span>` : c.label}${SLIM.has(c.k) || c.k === 'country' ? '' : arrow}${c.k === 'composite' ? `<span class="tg" data-tip="${showBreakdown ? 'Hide' : 'Show'} the individual scores behind this one">${showBreakdown ? '◂' : '▸'}</span>` : ''}</th>`;
+}).join('');
+
+let shownKey = null, shownBase = null, currentCols = COLS;
 function render() {
   const keys = [...sort, ...DEFAULT_SORT];
   const hideUnscored = $('f-scored').checked;
   const maxRam = ramLimit();
   const featured = $('f-featured').checked ? featuredSet() : null;
-  const rows = models.filter(m => (!featured || featured.has(m.id)) && (!hideUnscored || hasScore(m)) && (maxRam == null || m.q4 <= maxRam)).sort((a, b) => {
-    for (const [k, d] of keys) { const r = cmp(a, b, k, d); if (r) return r; }
-    return 0;
-  });
+  const fits = m => maxRam == null || m.q4 <= maxRam;
+  const key = JSON.stringify([sort, showBreakdown, !!featured, hideUnscored]);
+  let base = shownBase;
+  if (key !== shownKey) {
+    base = models.filter(m => (!featured || featured.has(m.id)) && (!hideUnscored || hasScore(m))).sort((a, b) => {
+      for (const [k, d] of keys) { const r = cmp(a, b, k, d); if (r) return r; }
+      return 0;
+    });
+    const sk = sort[0] && sort[0][0], sd = sort[0] && sort[0][1];
+    const cols = currentCols = COLS.filter(c => showBreakdown || !BREAKDOWN.has(c.k));
+    $('head').innerHTML = headHtml(cols, sk, sd);
+    // Parsing the rows is the slow part, so each model's <tr> is built once per column set and just re-attached on later renders.
+    if (rowCache.bd !== showBreakdown) rowCache = { bd: showBreakdown, map: new Map() };
+    $('body').replaceChildren(...base.map(m => {
+      let tr = rowCache.map.get(m.id);
+      if (!tr) {
+        tr = document.createElement('tr');
+        tr.innerHTML = rowHtml(m, cols);
+        tr._m = m; tr._els = Object.fromEntries(CUTS.map(c => [c.k, tr.querySelector(c.sel)]));
+        rowCache.map.set(m.id, tr);
+        updateCut(tr);
+      }
+      return tr;
+    }));
+    shownKey = key; shownBase = base;
+    document.querySelectorAll('th[data-k]').forEach(th => th.onclick = e => {
+      if (e.target.classList.contains('tg')) { showBreakdown = !showBreakdown; tipEl.style.display = 'none'; render(); return; }
+      const k = th.dataset.k;
+      const first = COLS.find(c => c.k === k).n ? -1 : 1;
+      sort = [[k, sk === k ? -sd : first]];
+      render();
+    });
+    layout();
+  }
+  let n = 0;
+  for (const m of base) {
+    const tr = rowCache.map.get(m.id), show = fits(m);
+    if (tr._show !== show) { tr.style.display = show ? '' : 'none'; tr._show = show; }
+    if (show) n++;
+  }
   $('ram-val').textContent = maxRam == null ? 'no limit' : (maxRam < 10 ? maxRam.toFixed(1) : Math.round(maxRam)) + ' GB';
-  $('status').innerHTML = `${rows.length} of ${models.length} models · ${info}`;
-  const sk = sort[0] && sort[0][0], sd = sort[0] && sort[0][1];
-  const cols = COLS.filter(c => showBreakdown || !BREAKDOWN.has(c.k));
-  $('head').innerHTML = cols.map(c =>
-    `<th data-k="${c.k}" class="${c.n ? 'n' : ''} ${CENTER.has(c.k) ? 'c' : ''} ${c.k === sk ? 'sorted' : ''} ${BREAKDOWN.has(c.k) ? 'bd' : ''}" data-tip="${(c.tip || '').replace(/"/g, '&quot;')}">${c.k === 'country' ? '<span class="full">Country</span><span class="short">Ctry</span>' : SLIM.has(c.k) ? `<span class="lbl">${c.label}${c.k === sk ? (sd > 0 ? ' ▲' : ' ▼') : ''}</span>` : c.label}${SLIM.has(c.k) || c.k === 'country' ? '' : c.k === sk ? (sd > 0 ? ' ▲' : ' ▼') : ''}${c.k === 'composite' ? `<span class="tg" data-tip="${showBreakdown ? 'Hide' : 'Show'} the individual scores behind this one">${showBreakdown ? '◂' : '▸'}</span>` : ''}</th>`).join('');
-  $('body').innerHTML = rows.map(m => '<tr>' + cols.map(c => {
-    const v = m[c.k];
-    let style = '', html;
-    if (c.k === 'id') { style = tint(orgs[m.org], 16); html = `<div><a href="https://huggingface.co/${m.id}" target="_blank" rel="noopener"><span>${m.id}</span></a><button class="cp" data-copy="${m.id}" data-tip="Copy &quot;${m.id}&quot; to the clipboard">⧉</button></div>`; }
-    else if (c.k === 'country') { style = tint(countries[m.country]?.color, 16); html = `<span data-tip="${countries[m.country]?.name || ''}">${m.country}</span>`; }
-    else if (c.k === 'org') { style = tint(orgs[m.org], 16); html = m.org; }
-    else if (c.k === 'product') { style = tint(orgs[m.org], 16); html = `<a href="https://huggingface.co/${m.id}" target="_blank" rel="noopener">${m.product}</a>`; }
-    else if (c.k === 'variant') html = `<span>${v ?? ''}</span>`;
-    else { html = c.fmt ? (v == null ? '' : c.fmt(v)) : (v ?? ''); if (c.hue && v != null && v !== '') style = heat(c.hue, c.scale(v, m)); }
-    const tip = c.k === 'variant' ? variantTip(m).replace(/"/g, '&quot;') : '';
-    return `<td class="${c.n ? 'n' : ''}${CENTER.has(c.k) ? ' c' : ''}${c.k === 'variant' ? ' var' : ''}${c.k === 'product' ? ' link' : c.k === 'id' ? ' link id-cell' : ''}" style="${style}"${tip ? ` data-tip="${tip}"` : ''}>${html}</td>`;
-  }).join('') + '</tr>').join('');
-  fitColumns();
+  $('status').innerHTML = `${n} of ${models.length} models · ${info}`;
   try { localStorage.setItem('om-prefs', JSON.stringify({ featured: $('f-featured').checked, hideUnscored, ram: +$('f-ram').value, showBreakdown, sort })); } catch (_) {}
-  document.querySelectorAll('th[data-k]').forEach(th => th.onclick = e => {
-    if (e.target.classList.contains('tg')) { showBreakdown = !showBreakdown; tipEl.style.display = 'none'; render(); return; }
-    const k = th.dataset.k;
-    const first = COLS.find(c => c.k === k).n ? -1 : 1;
-    sort = [[k, sk === k ? -sd : first]];
-    render();
-  });
 }
 
-// Slim the Hugging Face name (chopped on the left) and Variant (chopped on the right) before the table overflows, down to a minimum width each.
+// Column layout: widths are measured from the widest text in the whole data set, so they hold still while filtering.
+// They are recomputed only when the window resizes or the set of columns changes. The name (chopped on the left) and
+// Variant (chopped on the right) give way first, down to a minimum each; then headers turn sideways in stages.
 const MIN_W = { id: 170, variant: 90 };
-let fitCache = null, fitStage = -1;
-function fitColumns(remeasure = true) {
+const STAGES = [['country'], SCORE_KEYS, [...SLIM]];
+const slimmed = (k, s) => s > 0 && STAGES.slice(0, s).some(st => st.includes(k));
+const g = document.createElement('canvas').getContext('2d');
+const textW = s => g.measureText(s).width;
+let layoutCache = null, layoutSig = '', cutAvail = null;
+// Cells that can be cut off and fade out instead: where, what text they hold, and the cell chrome around it (padding, border, copy button).
+const CUTS = [
+  { k:'id',      sel:'td.id-cell a',       text:m => m.id,                  extra:33 },
+  { k:'variant', sel:'td.var > span',      text:m => String(m.variant ?? ''), extra:11 },
+  { k:'org',     sel:'td.org > span',      text:m => m.org,                 extra:11 },
+  { k:'product', sel:'td.link:not(.id-cell) a', text:m => String(m.product ?? ''), extra:11 }
+];
+const P_CAP = { org:1, product:1 }; // sized for a typical value (90th percentile); the longest ones fade out
+
+function measureColumns(cols) {
+  const cs = getComputedStyle(document.body);
+  g.font = `${cs.fontSize} ${cs.fontFamily}`;
+  const cellText = (m, c) => { const v = m[c.k]; return c.fmt ? (v == null ? '' : String(c.fmt(v))) : String(v ?? ''); };
+  // padding + border, plus the name's copy button; +4 covers digits being slightly wider in the real tabular font
+  const cell = cols.map(c => {
+    const ws = models.map(m => textW(cellText(m, c))).sort((a, b) => a - b);
+    return (P_CAP[c.k] ? ws[Math.floor(ws.length * 0.9)] : ws[ws.length - 1]) + (c.k === 'id' ? 33 : 11) + 4;
+  });
+  const t = document.createElement('table');
+  t.style.cssText = 'position:absolute;visibility:hidden;left:0;top:0;table-layout:auto;width:auto';
+  t.innerHTML = `<thead><tr>${headHtml(cols, null, 0, true)}</tr></thead>`;
+  document.body.appendChild(t);
+  const ths = [...t.querySelectorAll('th')];
+  const stages = [];
+  for (let s = 0; s <= STAGES.length; s++) {
+    ths.forEach(th => th.classList.toggle('slim', slimmed(th.dataset.k, s)));
+    stages.push(ths.map((th, i) => Math.max(th.getBoundingClientRect().width, cell[i])));
+  }
+  t.remove();
+  return stages;
+}
+
+// Fade the name/Variant text only where it is actually cut off (and tip the full name).
+function updateCut(tr) {
+  if (!cutAvail) return;
+  const m = tr._m, tw = m._tw ??= {};
+  for (const c of CUTS) {
+    const el = tr._els[c.k];
+    if (!el) continue;
+    const text = c.text(m), cut = (tw[c.k] ??= textW(text)) > cutAvail[c.k];
+    el.classList.toggle('cut', cut);
+    if (c.k === 'id') el.dataset.tip = cut ? text : '';
+  }
+}
+
+function layout() {
   const wrap = document.querySelector('.wrap'), table = wrap.querySelector('table');
-  const heads = [...table.querySelectorAll('th')];
-  const idx = {};
-  heads.forEach((th, i) => { if (MIN_W[th.dataset.k]) idx[th.dataset.k] = i; });
-  const vars = { id: '--id-max', variant: '--var-max' };
-  const set = (k, px) => { if (px == null) table.style.removeProperty(vars[k]); else table.style.setProperty(vars[k], px + 'px'); };
-  // Slimming order: the name and Variant columns first, then headers go sideways in stages (Country, the score flyout, the rest).
-  const stages = [['country'], SCORE_KEYS, [...SLIM]];
-  const apply = s => {
-    heads.forEach(th => th.classList.toggle('slim', s > 0 && stages.slice(0, s).some(st => st.includes(th.dataset.k))));
-    fitStage = s;
-  };
-  // Natural widths per stage don't depend on the window, so measure them once per render and reuse them while resizing.
-  if (remeasure || !fitCache) {
-    fitCache = [];
-    for (const k in vars) set(k, null);
-    for (let s = 0; s <= stages.length; s++) {
-      apply(s);
-      const w = {};
-      for (const k in idx) w[k] = heads[idx[k]].getBoundingClientRect().width;
-      fitCache.push({ table: table.getBoundingClientRect().width, w });
-    }
+  const cols = currentCols, sig = cols.map(c => c.k).join();
+  if (sig !== layoutSig) {
+    layoutCache = measureColumns(cols);
+    layoutSig = sig;
+    cutAvail = null;
+    table.querySelector('colgroup').innerHTML = cols.map(() => '<col>').join('');
   }
-  // Pick the fewest sideways stages that let the name/Variant columns absorb the overflow, so no space is left unused.
+  const iId = cols.findIndex(c => c.k === 'id'), iVar = cols.findIndex(c => c.k === 'variant');
+  const sum = w => w.reduce((a, b) => a + b, 0);
+  const room = w => w[iId] - MIN_W.id + w[iVar] - MIN_W.variant;
   const avail = wrap.clientWidth;
+  // Fewest sideways stages that let the name/Variant columns absorb the overflow, so no space is left unused.
   let s = 0;
-  for (; s < fitCache.length - 1; s++) {
-    const c = fitCache[s];
-    if (c.table - avail <= Object.keys(idx).reduce((t, k) => t + c.w[k] - MIN_W[k], 0)) break;
+  while (s < layoutCache.length - 1 && sum(layoutCache[s]) - avail > room(layoutCache[s])) s++;
+  const w = layoutCache[s].slice();
+  let over = sum(w) - avail;
+  for (const [i, min] of [[iId, MIN_W.id], [iVar, MIN_W.variant]]) {
+    const cut = Math.max(0, Math.min(over + 2, w[i] - min));
+    w[i] -= cut; over -= cut;
   }
-  if (s !== fitStage || remeasure) apply(s);
-  const { table: tw, w } = fitCache[s];
-  let over = tw - avail;
-  for (const k of ['id', 'variant']) {
-    if (!(k in idx)) continue;
-    const cut = Math.max(0, Math.min(over + 2, w[k] - MIN_W[k]));
-    if (cut > 0) { set(k, w[k] - cut - (k === 'id' ? 0 : 11)); over -= cut; } else set(k, null);
+  document.querySelectorAll('#head th').forEach(th => th.classList.toggle('slim', slimmed(th.dataset.k, s)));
+  [...table.querySelectorAll('col')].forEach((col, i) => { col.style.width = w[i] + 'px'; });
+  table.style.width = sum(w) + 'px';
+  const avail2 = Object.fromEntries(CUTS.map(c => [c.k, w[cols.findIndex(x => x.k === c.k)] - c.extra]));
+  if (!cutAvail || CUTS.some(c => avail2[c.k] !== cutAvail[c.k])) {
+    cutAvail = avail2;
+    for (const tr of rowCache.map.values()) updateCut(tr);
   }
-  table.querySelectorAll('td.id-cell a').forEach(a => { a.dataset.tip = a.scrollWidth > a.clientWidth ? a.textContent : ''; });
 }
 let fitQueued = false;
 window.addEventListener('resize', () => {
   if (fitQueued) return;
   fitQueued = true;
-  requestAnimationFrame(() => { fitQueued = false; fitColumns(false); });
+  requestAnimationFrame(() => { fitQueued = false; layout(); });
 });
 
 const tipEl = $('tip');
@@ -419,8 +504,8 @@ Promise.all([fetch('data/models.json', {cache:'no-cache'}).then(r => r.json()), 
       if (Array.isArray(p.sort) && p.sort.length && p.sort.every(x => COLS.some(c => c.k === x[0]) && (x[1] === 1 || x[1] === -1))) sort = p.sort;
     }
   } catch (_) {}
-  $('f-ram').addEventListener('input', render);
-  $('f-ram').addEventListener('wheel', e => { e.preventDefault(); const r = e.currentTarget; r.value = Math.min(1000, Math.max(0, +r.value - Math.sign(e.deltaY) * 10)); render(); }, { passive:false });
+  $('f-ram').addEventListener('input', sliderRender);
+  $('f-ram').addEventListener('wheel', e => { e.preventDefault(); const r = e.currentTarget; r.value = Math.min(1000, Math.max(0, +r.value - Math.sign(e.deltaY) * 10)); sliderRender(); }, { passive:false });
   addVersionRank(models);
   addComposite(models);
   render();
