@@ -26,6 +26,8 @@
   td.id-cell a { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; direction:rtl; text-align:left; }
   td.id-cell a span { direction:ltr; unicode-bidi:isolate; }
   td.id-cell .cp { flex:none; }
+  td.id-cell > div { max-width:var(--id-max, none); }
+  td.var > span { max-width:var(--var-max, none); }
   td.var span { display:block; overflow:hidden; text-overflow:ellipsis; }
   .cp { all:unset; cursor:pointer; box-sizing:border-box; margin:0 3px; width:16px; height:14px; line-height:12px; text-align:center; font-size:11px; border:1px solid var(--grid); border-radius:3px; opacity:.55; }
   .cp:hover { opacity:1; background:rgba(128,128,128,.25); }
@@ -285,34 +287,54 @@ function render() {
 
 // Slim the Hugging Face name (chopped on the left) and Variant (chopped on the right) before the table overflows, down to a minimum width each.
 const MIN_W = { id: 170, variant: 90 };
-function fitColumns() {
+let fitCache = null, fitStage = -1;
+function fitColumns(remeasure = true) {
   const wrap = document.querySelector('.wrap'), table = wrap.querySelector('table');
-  const inner = { id: 'td.id-cell > div', variant: 'td.var > span' };
-  const idx = {}, w = {};
-  [...table.querySelectorAll('th')].forEach((th, i) => { if (MIN_W[th.dataset.k]) idx[th.dataset.k] = i; });
-  const set = (k, px) => table.querySelectorAll(inner[k]).forEach(el => { el.style.maxWidth = px == null ? '' : px + 'px'; });
-  for (const k in inner) set(k, null);
-  // Slimming order: the name and Variant columns first, then headers go sideways in stages (Country, the score flyout, the rest).
-  // Pick the fewest sideways stages that let the name/Variant columns absorb the overflow, so no space is left unused.
-  const stages = [['country'], SCORE_KEYS, [...SLIM]];
   const heads = [...table.querySelectorAll('th')];
-  heads.forEach(th => th.classList.remove('slim'));
-  let over = 0;
-  for (let s = 0; s <= stages.length; s++) {
-    if (s > 0) heads.forEach(th => { if (stages[s - 1].includes(th.dataset.k)) th.classList.add('slim'); });
-    for (const k in inner) set(k, null);
-    over = table.offsetWidth - wrap.clientWidth;
-    for (const k in idx) w[k] = heads[idx[k]].offsetWidth;
-    if (over <= Object.keys(idx).reduce((t, k) => t + w[k] - MIN_W[k], 0)) break;
+  const idx = {};
+  heads.forEach((th, i) => { if (MIN_W[th.dataset.k]) idx[th.dataset.k] = i; });
+  const vars = { id: '--id-max', variant: '--var-max' };
+  const set = (k, px) => { if (px == null) table.style.removeProperty(vars[k]); else table.style.setProperty(vars[k], px + 'px'); };
+  // Slimming order: the name and Variant columns first, then headers go sideways in stages (Country, the score flyout, the rest).
+  const stages = [['country'], SCORE_KEYS, [...SLIM]];
+  const apply = s => {
+    heads.forEach(th => th.classList.toggle('slim', s > 0 && stages.slice(0, s).some(st => st.includes(th.dataset.k))));
+    fitStage = s;
+  };
+  // Natural widths per stage don't depend on the window, so measure them once per render and reuse them while resizing.
+  if (remeasure || !fitCache) {
+    fitCache = [];
+    for (const k in vars) set(k, null);
+    for (let s = 0; s <= stages.length; s++) {
+      apply(s);
+      const w = {};
+      for (const k in idx) w[k] = heads[idx[k]].offsetWidth;
+      fitCache.push({ table: table.offsetWidth, w });
+    }
   }
+  // Pick the fewest sideways stages that let the name/Variant columns absorb the overflow, so no space is left unused.
+  const avail = wrap.clientWidth;
+  let s = 0;
+  for (; s < fitCache.length - 1; s++) {
+    const c = fitCache[s];
+    if (c.table - avail <= Object.keys(idx).reduce((t, k) => t + c.w[k] - MIN_W[k], 0)) break;
+  }
+  if (s !== fitStage || remeasure) apply(s);
+  const { table: tw, w } = fitCache[s];
+  let over = tw - avail;
   for (const k of ['id', 'variant']) {
     if (!(k in idx)) continue;
     const cut = Math.max(0, Math.min(over + 1, w[k] - MIN_W[k]));
-    if (cut > 0) { set(k, w[k] - cut - (k === 'id' ? 0 : 11)); over -= cut; }
+    if (cut > 0) { set(k, w[k] - cut - (k === 'id' ? 0 : 11)); over -= cut; } else set(k, null);
   }
   table.querySelectorAll('td.id-cell a').forEach(a => { a.dataset.tip = a.scrollWidth > a.clientWidth ? a.textContent : ''; });
 }
-window.addEventListener('resize', fitColumns);
+let fitQueued = false;
+window.addEventListener('resize', () => {
+  if (fitQueued) return;
+  fitQueued = true;
+  requestAnimationFrame(() => { fitQueued = false; fitColumns(false); });
+});
 
 const tipEl = $('tip');
 document.addEventListener('click', e => {
