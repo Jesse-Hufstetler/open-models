@@ -1,5 +1,5 @@
 {
- "fetched": "2026-10-24T17:15:25.798Z",
+ "fetched": "2026-10-26T13:13:01.614Z",
  "source": "Artificial Analysis",
  "models": [
   {
@@ -10,7 +10,7 @@
    "intelligence": 6.7,
    "coding": null,
    "agentic": null,
-   "tps": 65.93
+   "tps": 68.61
   },
   {
    "name": "Gemini 3.5 Flash (High)",
@@ -20,7 +20,7 @@
    "intelligence": 32.6,
    "coding": 70.1,
    "agentic": 26,
-   "tps": 208.86
+   "tps": 194.46
   },
   {
    "name": "MiMo-V2.5-Pro (Reasoning)",
@@ -30,7 +30,7 @@
    "intelligence": 26,
    "coding": 60.2,
    "agentic": 21.3,
-   "tps": 51.85
+   "tps": 51.63
   },
   {
    "name": "JT-35B-Flash",
@@ -50,7 +50,7 @@
    "intelligence": 34.2,
    "coding": null,
    "agentic": null,
-   "tps": 102.67
+   "tps": 118.73
   },
   {
    "name": "Mercury 2",
@@ -60,7 +60,7 @@
    "intelligence": 10.8,
    "coding": 31.1,
    "agentic": 1.6,
-   "tps": 450.73
+   "tps": 502.19
   },
   {
    "name": "Qwen3.5 Omni Plus",
@@ -70,7 +70,7 @@
    "intelligence": 20.4,
    "coding": null,
    "agentic": null,
-   "tps": 117.07
+   "tps": 119.69
   },
   {
    "name": "Nova 2.0 Omni (Medium)",
@@ -90,7 +90,7 @@
    "intelligence": 28.5,
    "coding": null,
    "agentic": null,
-   "tps": 82.25
+   "tps": 119.14
   },
   {
    "name": "Qwen3.5 122B A10B (Non-reasoning)",
@@ -100,7 +100,7 @@
    "intelligence": 17.7,
    "coding": 43.3,
    "agentic": null,
-   "tps": 143.42
+   "tps": 143.47
   },
   {
    "name": "Gemma 4 12B (Non-reasoning)",
@@ -110,7 +110,7 @@
    "intelligence": 9.4,
    "coding": null,
    "agentic": null,
-   "tps": 124.02
+   "tps": 119.79
   },
   {
    "name": "Gemini 3.5 Flash (Minimal)",
@@ -120,7 +120,7 @@
    "intelligence": 23.8,
    "coding": null,
    "agentic": null,
-   "tps": 194.81
+   "tps": 191.64
   },
   {
    "name": "Claude 3.5 Haiku",
@@ -160,7 +160,7 @@
    "intelligence": 40.8,
    "coding": null,
    "agentic": null,
-   "tps": 105.79
+   "tps": 104.25
   },
   {
    "name": "Qwen2.5 Coder Instruct 32B",
@@ -210,7 +210,7 @@
    "intelligence": 23.7,
    "coding": null,
    "agentic": null,
-   "tps": 127.04
+   "tps": 127.11
   },
   {
    "name": "Muse Spark 1.2 (Xhigh)",
@@ -220,7 +220,7 @@
    "intelligence": 39.6,
    "coding": 72.2,
    "agentic": 43.2,
-   "tps": 287.58
+   "tps": 291.68
   },
   {
    "name": "GPT-5.6 Luna (Low)",
@@ -230,7 +230,7 @@
    "intelligence": 21,
    "coding": 44.2,
    "agentic": 16.1,
-   "tps": 119.37
+   "tps": 114.88
   },
   {
    "name": "Claude Fable 5.1 (Low, Default Fallback)",
@@ -240,7 +240,7 @@
    "intelligence": 46.8,
    "coding": 75.2,
    "agentic": 47.1,
-   "tps": 58.16
+   "tps": 56.4
   },
   {
    "name": "Mistral Medium 3.1",
@@ -260,7 +260,7 @@
    "intelligence": 7.1,
    "coding": null,
    "agentic": null,
-   "tps": 123.92
+   "tps": 151.4
   },
   {
    "name": "Gemini 2.5 Pro Preview (May' 25)",
@@ -280,7 +280,7 @@
    "intelligence": 11,
    "coding": 16.3,
    "agentic": 0.9,
-   "tps": 224.98
+   "tps": 216.36
   },
   {
    "name": "o1-preview",
@@ -320,7 +320,7 @@
    "intelligence": 33.5,
    "coding": 69.7,
    "agentic": 31.6,
-   "tps": 81.17
+   "tps": 79.09
   },
   {
    "name": "GPT-6.1 Sol (Xhigh)",
@@ -330,7 +330,7 @@
    "intelligence": 51,
    "coding": null,
    "agentic": null,
-   "tps": 51.77
+   "tps": 61.15
   },
   {
    "name": "Qwen3 Coder 480B A35B Instruct",
@@ -340,7 +340,7 @@
    "intelligence": 11.9,
    "coding": null,
    "agentic": null,
-   "tps": 84.5
+   "tps": 80.96
   },
   {
    "name": "Gemini 3.5 Flash-Lite",
@@ -350,7 +350,7 @@
    "intelligence": 22.2,
    "coding": 49.3,
    "agentic": 14.3,
-   "tps": 427.91
+   "tps": 403.3
   },
   {
    "name": "Step 5 Preview",
@@ -360,7 +360,7 @@
    "intelligence": 43.7,
    "coding": null,
    "agentic": null,
-   "tps": 228.73
+   "tps": 215.6
   },
   {
    "name": "Qwen3.5 2B (Non-reasoning)",
@@ -410,7 +410,7 @@
    "intelligence": 6,
    "coding": null,
    "agentic": null,
-   "tps": 96.45
+   "tps": 96.33
   },
   {
    "name": "Grok Build 0.1 0616",
@@ -420,7 +420,7 @@
    "intelligence": 27.2,
    "coding": 51.5,
    "agentic": null,
-   "tps": 64.83
+   "tps": 76.85
   },
   {
    "name": "Granite 4.2 3B",
@@ -430,7 +430,7 @@
    "intelligence": 9.1,
    "coding": 17.5,
    "agentic": 0.9,
-   "tps": 72.4
+   "tps": 40.4
   },
   {
    "name": "Nova 2.0 Pro Preview (Medium)",
@@ -440,7 +440,7 @@
    "intelligence": 14.2,
    "coding": 34,
    "agentic": null,
-   "tps": 126.68
+   "tps": 126.26
   },
   {
    "name": "Inkling (Xhigh)",
@@ -450,7 +450,7 @@
    "intelligence": 25,
    "coding": 52.1,
    "agentic": 22.5,
-   "tps": 198.07
+   "tps": 179.31
   },
   {
    "name": "Kimi K2.6 (Reasoning)",
@@ -460,7 +460,7 @@
    "intelligence": 27,
    "coding": 61.8,
    "agentic": 20.5,
-   "tps": 73.87
+   "tps": 95.88
   },
   {
    "name": "DeepSeek R1 (Jan '25)",
@@ -470,7 +470,7 @@
    "intelligence": 11.4,
    "coding": 24.6,
    "agentic": 1.1,
-   "tps": 146.01
+   "tps": 156.95
   },
   {
    "name": "DeepSeek R1 Distill Llama 8B",
@@ -500,7 +500,7 @@
    "intelligence": 18.4,
    "coding": 48.2,
    "agentic": 8.3,
-   "tps": 58.64
+   "tps": 58.62
   },
   {
    "name": "LFM2 1.2B",
@@ -520,7 +520,7 @@
    "intelligence": 23.6,
    "coding": null,
    "agentic": null,
-   "tps": 73.04
+   "tps": 95.59
   },
   {
    "name": "Magistral Small 1",
@@ -540,7 +540,7 @@
    "intelligence": 12.7,
    "coding": 29.9,
    "agentic": 3.5,
-   "tps": 70.63
+   "tps": 39.86
   },
   {
    "name": "K2 Horizon 7B",
@@ -560,7 +560,7 @@
    "intelligence": 37.9,
    "coding": null,
    "agentic": null,
-   "tps": 59.42
+   "tps": 52.09
   },
   {
    "name": "LFM 40B",
@@ -580,7 +580,7 @@
    "intelligence": 22.8,
    "coding": null,
    "agentic": null,
-   "tps": 61.23
+   "tps": 57.94
   },
   {
    "name": "Mistral Small 4 (Non-reasoning)",
@@ -600,7 +600,7 @@
    "intelligence": 49.7,
    "coding": 77,
    "agentic": 55.6,
-   "tps": 52.36
+   "tps": 52.23
   },
   {
    "name": "Claude 3.7 Sonnet (Reasoning)",
@@ -620,7 +620,7 @@
    "intelligence": 24.3,
    "coding": null,
    "agentic": null,
-   "tps": 66.32
+   "tps": 65.8
   },
   {
    "name": "MiMo-V2-Flash (Feb 2026)",
@@ -670,7 +670,7 @@
    "intelligence": 10,
    "coding": null,
    "agentic": null,
-   "tps": 174.29
+   "tps": 207.65
   },
   {
    "name": "Qwen3.5 27B (Reasoning)",
@@ -680,7 +680,7 @@
    "intelligence": 22.9,
    "coding": null,
    "agentic": null,
-   "tps": 77.22
+   "tps": 77.25
   },
   {
    "name": "o3",
@@ -690,7 +690,7 @@
    "intelligence": 20.2,
    "coding": null,
    "agentic": null,
-   "tps": 142
+   "tps": 165.78
   },
   {
    "name": "Gemini 1.5 Pro (May '24)",
@@ -730,7 +730,7 @@
    "intelligence": 41.8,
    "coding": 71.5,
    "agentic": 50.9,
-   "tps": 69.31
+   "tps": 73.01
   },
   {
    "name": "GPT-6 Luna (Xhigh)",
@@ -740,7 +740,7 @@
    "intelligence": 34.6,
    "coding": null,
    "agentic": null,
-   "tps": 127.09
+   "tps": 121.59
   },
   {
    "name": "DeepSeek V3.1 (Reasoning)",
@@ -750,7 +750,7 @@
    "intelligence": 13.5,
    "coding": null,
    "agentic": null,
-   "tps": 119.53
+   "tps": 119.86
   },
   {
    "name": "Llama 3.3 Nemotron Super 49B v1 (Reasoning)",
@@ -770,7 +770,7 @@
    "intelligence": 17,
    "coding": null,
    "agentic": null,
-   "tps": 139.07
+   "tps": 149.76
   },
   {
    "name": "Mistral Large 2 (Jul '24)",
@@ -820,7 +820,7 @@
    "intelligence": 6.7,
    "coding": null,
    "agentic": null,
-   "tps": 290.92
+   "tps": 279.91
   },
   {
    "name": "Hermes 3 - Llama-3.1 70B",
@@ -830,7 +830,7 @@
    "intelligence": 6,
    "coding": null,
    "agentic": null,
-   "tps": 32.34
+   "tps": 32.16
   },
   {
    "name": "North Mini Code",
@@ -840,7 +840,7 @@
    "intelligence": 9.9,
    "coding": 36.5,
    "agentic": 1.1,
-   "tps": 63.51
+   "tps": 66.22
   },
   {
    "name": "Sonar Reasoning Pro",
@@ -880,7 +880,7 @@
    "intelligence": 52.4,
    "coding": 75.9,
    "agentic": 50.2,
-   "tps": 58.24
+   "tps": 67.52
   },
   {
    "name": "Nova 2.0 Omni (Non-reasoning)",
@@ -920,7 +920,7 @@
    "intelligence": 37.8,
    "coding": null,
    "agentic": null,
-   "tps": 183.85
+   "tps": 185.04
   },
   {
    "name": "Grok 4.7 (Low)",
@@ -930,7 +930,7 @@
    "intelligence": 42.2,
    "coding": null,
    "agentic": null,
-   "tps": 78.04
+   "tps": 75.15
   },
   {
    "name": "Claude Opus 5 (Low)",
@@ -940,7 +940,7 @@
    "intelligence": 39.4,
    "coding": 66.9,
    "agentic": 36,
-   "tps": 52.71
+   "tps": 52.78
   },
   {
    "name": "Qwen3.5 9B (Non-reasoning)",
@@ -950,7 +950,7 @@
    "intelligence": 13.3,
    "coding": 23.5,
    "agentic": null,
-   "tps": 79.35
+   "tps": 80.88
   },
   {
    "name": "Mistral 7B Instruct",
@@ -970,7 +970,7 @@
    "intelligence": 13.1,
    "coding": null,
    "agentic": null,
-   "tps": 218.77
+   "tps": 216.76
   },
   {
    "name": "Gemma 3 4B Instruct",
@@ -990,7 +990,7 @@
    "intelligence": 15.6,
    "coding": 45.7,
    "agentic": 7.6,
-   "tps": 128.43
+   "tps": 131.32
   },
   {
    "name": "MiMo-V2.5",
@@ -1000,7 +1000,7 @@
    "intelligence": 21.8,
    "coding": 56.8,
    "agentic": 15.8,
-   "tps": 71.24
+   "tps": 38.58
   },
   {
    "name": "Grok 4.1 Fast (Reasoning)",
@@ -1030,7 +1030,7 @@
    "intelligence": 6.8,
    "coding": null,
    "agentic": null,
-   "tps": 272.56
+   "tps": 285.31
   },
   {
    "name": "Claude Sonnet 5 (Max)",
@@ -1040,7 +1040,7 @@
    "intelligence": 38.2,
    "coding": 71.5,
    "agentic": 43.6,
-   "tps": 83.5
+   "tps": 83.94
   },
   {
    "name": "Grok 3",
@@ -1050,7 +1050,7 @@
    "intelligence": 12.1,
    "coding": null,
    "agentic": null,
-   "tps": 90.97
+   "tps": 87.94
   },
   {
    "name": "GLM 5V Turbo (Reasoning)",
@@ -1070,7 +1070,7 @@
    "intelligence": 7.1,
    "coding": 26.3,
    "agentic": 1.2,
-   "tps": 43.23
+   "tps": 51.36
   },
   {
    "name": "MiMo-V2.6-Pro",
@@ -1080,7 +1080,7 @@
    "intelligence": 46.3,
    "coding": null,
    "agentic": null,
-   "tps": 56.32
+   "tps": 53.8
   },
   {
    "name": "Claude Opus 4.5 (Reasoning)",
@@ -1090,7 +1090,7 @@
    "intelligence": 29.1,
    "coding": null,
    "agentic": null,
-   "tps": 53.64
+   "tps": 54.86
   },
   {
    "name": "Grok 4.6 (Medium)",
@@ -1100,7 +1100,7 @@
    "intelligence": 42.8,
    "coding": 74.4,
    "agentic": 50.6,
-   "tps": 75.04
+   "tps": 70.69
   },
   {
    "name": "Claude Sonnet 5.5 (High, Default Fallback)",
@@ -1120,7 +1120,7 @@
    "intelligence": 9.6,
    "coding": null,
    "agentic": null,
-   "tps": 113.21
+   "tps": 132.76
   },
   {
    "name": "Llama Nemotron Super 49B v1.5 (Non-reasoning)",
@@ -1140,7 +1140,7 @@
    "intelligence": 30.1,
    "coding": 64.7,
    "agentic": 30.4,
-   "tps": 114.58
+   "tps": 114.25
   },
   {
    "name": "Gemini 2.5 Pro",
@@ -1150,7 +1150,7 @@
    "intelligence": 16.1,
    "coding": 33.3,
    "agentic": 1.6,
-   "tps": 118.51
+   "tps": 109.9
   },
   {
    "name": "Grok 4.7 (High)",
@@ -1160,7 +1160,7 @@
    "intelligence": 46.3,
    "coding": null,
    "agentic": null,
-   "tps": 86.15
+   "tps": 85.52
   },
   {
    "name": "MiniMax-M2.1",
@@ -1170,7 +1170,7 @@
    "intelligence": 20.9,
    "coding": null,
    "agentic": null,
-   "tps": 67.44
+   "tps": 58.54
   },
   {
    "name": "MiniMax-M3",
@@ -1180,7 +1180,7 @@
    "intelligence": 29.2,
    "coding": 58.6,
    "agentic": 29.5,
-   "tps": 98.36
+   "tps": 105.26
   },
   {
    "name": "Grok 2 (Dec '24)",
@@ -1210,7 +1210,7 @@
    "intelligence": 16.8,
    "coding": 15.6,
    "agentic": 6.8,
-   "tps": 118.18
+   "tps": 110.45
   },
   {
    "name": "Nemotron 3.5 Lightning",
@@ -1220,7 +1220,7 @@
    "intelligence": 12.9,
    "coding": 26.8,
    "agentic": 3.5,
-   "tps": 291.49
+   "tps": 301.83
   },
   {
    "name": "Qwen3 4B 2507 (Reasoning)",
@@ -1280,7 +1280,7 @@
    "intelligence": 14.9,
    "coding": null,
    "agentic": null,
-   "tps": 83.89
+   "tps": 80.31
   },
   {
    "name": "Phi-4 Multimodal Instruct",
@@ -1300,7 +1300,7 @@
    "intelligence": 4.9,
    "coding": null,
    "agentic": null,
-   "tps": 38.48
+   "tps": null
   },
   {
    "name": "DeepSeek-V2-Chat",
@@ -1320,7 +1320,7 @@
    "intelligence": 11.2,
    "coding": 28.7,
    "agentic": 1.2,
-   "tps": 58.83
+   "tps": 59.8
   },
   {
    "name": "o3-mini",
@@ -1330,7 +1330,7 @@
    "intelligence": 12.5,
    "coding": null,
    "agentic": null,
-   "tps": 187.25
+   "tps": 246.32
   },
   {
    "name": "Grok 4 Fast (Non-reasoning)",
@@ -1350,7 +1350,7 @@
    "intelligence": 24.7,
    "coding": null,
    "agentic": null,
-   "tps": 45.82
+   "tps": 49.5
   },
   {
    "name": "Ling-2.6-1T",
@@ -1380,7 +1380,7 @@
    "intelligence": 6.8,
    "coding": null,
    "agentic": null,
-   "tps": 167.04
+   "tps": 169.95
   },
   {
    "name": "Command A+",
@@ -1390,7 +1390,7 @@
    "intelligence": 13.1,
    "coding": 27.8,
    "agentic": 1,
-   "tps": 147.41
+   "tps": 157.63
   },
   {
    "name": "GPT-6 Astra (Max)",
@@ -1400,7 +1400,7 @@
    "intelligence": 52.7,
    "coding": 76.9,
    "agentic": 51,
-   "tps": 65.05
+   "tps": 66.67
   },
   {
    "name": "Claude Opus 5.5 (Max, Default Fallback)",
@@ -1410,7 +1410,7 @@
    "intelligence": 57.6,
    "coding": null,
    "agentic": null,
-   "tps": 96.15
+   "tps": 97.61
   },
   {
    "name": "EXAONE 4.0 32B (Non-reasoning)",
@@ -1430,7 +1430,7 @@
    "intelligence": 30.9,
    "coding": null,
    "agentic": null,
-   "tps": 49.05
+   "tps": 48.12
   },
   {
    "name": "G9v3-3B",
@@ -1450,7 +1450,7 @@
    "intelligence": 7.6,
    "coding": null,
    "agentic": null,
-   "tps": 62.75
+   "tps": 65.31
   },
   {
    "name": "Qwen3.5 4B (Non-reasoning)",
@@ -1460,7 +1460,7 @@
    "intelligence": 10.8,
    "coding": 20.3,
    "agentic": null,
-   "tps": 10.95
+   "tps": 15.03
   },
   {
    "name": "Qwen3.5 397B A17B (Non-reasoning)",
@@ -1470,7 +1470,7 @@
    "intelligence": 21.4,
    "coding": null,
    "agentic": null,
-   "tps": 59.2
+   "tps": 59.45
   },
   {
    "name": "K2 Horizon 3.7B",
@@ -1490,7 +1490,7 @@
    "intelligence": 12,
    "coding": null,
    "agentic": null,
-   "tps": 38.92
+   "tps": 50.52
   },
   {
    "name": "Olmo 3 7B Think",
@@ -1540,7 +1540,7 @@
    "intelligence": 5.9,
    "coding": null,
    "agentic": null,
-   "tps": 286.55
+   "tps": 303.09
   },
   {
    "name": "Sarvam M (Reasoning, Based on Mistral Small 3.1)",
@@ -1560,7 +1560,7 @@
    "intelligence": 38.4,
    "coding": null,
    "agentic": null,
-   "tps": 99.78
+   "tps": 113.06
   },
   {
    "name": "Qwen2.5 Turbo",
@@ -1590,7 +1590,7 @@
    "intelligence": 20.2,
    "coding": 44.6,
    "agentic": 22.4,
-   "tps": 49.86
+   "tps": 49.91
   },
   {
    "name": "Mistral Small (Feb '24)",
@@ -1610,7 +1610,7 @@
    "intelligence": 38.9,
    "coding": null,
    "agentic": null,
-   "tps": 151.81
+   "tps": 167.48
   },
   {
    "name": "GPT-6 Luna (Medium)",
@@ -1620,7 +1620,7 @@
    "intelligence": 29.9,
    "coding": null,
    "agentic": null,
-   "tps": 91.54
+   "tps": null
   },
   {
    "name": "INTELLECT-3 (Based on GLM-4.5-Air)",
@@ -1640,7 +1640,7 @@
    "intelligence": 9,
    "coding": 20.7,
    "agentic": 1.2,
-   "tps": 154.42
+   "tps": 184.24
   },
   {
    "name": "MiniMax M1 40k",
@@ -1660,7 +1660,7 @@
    "intelligence": 19.7,
    "coding": null,
    "agentic": null,
-   "tps": 207.65
+   "tps": 237.55
   },
   {
    "name": "Olmo 3.1 32B Think",
@@ -1680,7 +1680,7 @@
    "intelligence": 19.8,
    "coding": 46.6,
    "agentic": null,
-   "tps": 57.6
+   "tps": 57.69
   },
   {
    "name": "Nex-N2-Pro (Based on Qwen3.5-397B-A17B)",
@@ -1700,7 +1700,7 @@
    "intelligence": 12.7,
    "coding": null,
    "agentic": null,
-   "tps": 160.81
+   "tps": 183.58
   },
   {
    "name": "Claude Fable 5.1 (Medium, Default Fallback)",
@@ -1710,7 +1710,7 @@
    "intelligence": 48.9,
    "coding": 77.1,
    "agentic": 50.2,
-   "tps": 55.56
+   "tps": 55.54
   },
   {
    "name": "GPT-6.1 Sol (High)",
@@ -1720,7 +1720,7 @@
    "intelligence": 50.2,
    "coding": null,
    "agentic": null,
-   "tps": 52.16
+   "tps": 57.21
   },
   {
    "name": "Command A",
@@ -1730,7 +1730,7 @@
    "intelligence": 7,
    "coding": null,
    "agentic": null,
-   "tps": 42.92
+   "tps": 23.8
   },
   {
    "name": "LFM2.5-VL-1.6B",
@@ -1790,7 +1790,7 @@
    "intelligence": 7.6,
    "coding": null,
    "agentic": null,
-   "tps": 147.58
+   "tps": 131.27
   },
   {
    "name": "Claude Fable 5.1 (Max, Default Fallback)",
@@ -1800,7 +1800,7 @@
    "intelligence": 53.4,
    "coding": 81.6,
    "agentic": 57.9,
-   "tps": 68.98
+   "tps": 70.05
   },
   {
    "name": "Mixtral 8x7B Instruct",
@@ -1810,7 +1810,7 @@
    "intelligence": 5.1,
    "coding": null,
    "agentic": null,
-   "tps": 25.38
+   "tps": 24.78
   },
   {
    "name": "Molmo2-8B",
@@ -1830,7 +1830,7 @@
    "intelligence": 11.3,
    "coding": 26.6,
    "agentic": 0.8,
-   "tps": 183.13
+   "tps": 174.58
   },
   {
    "name": "Qwen3.5 0.8B (Non-reasoning)",
@@ -1850,7 +1850,7 @@
    "intelligence": 27.9,
    "coding": null,
    "agentic": null,
-   "tps": 68.86
+   "tps": 72.68
   },
   {
    "name": "Claude Opus 4.5 (Non-reasoning)",
@@ -1860,7 +1860,7 @@
    "intelligence": 23.7,
    "coding": null,
    "agentic": null,
-   "tps": 48
+   "tps": 51.02
   },
   {
    "name": "Claude Haiku 5.5 (Xhigh)",
@@ -1870,7 +1870,7 @@
    "intelligence": 41.2,
    "coding": null,
    "agentic": null,
-   "tps": 190.2
+   "tps": 195.17
   },
   {
    "name": "Qwen Chat 72B",
@@ -1900,7 +1900,7 @@
    "intelligence": 37.3,
    "coding": 71.4,
    "agentic": 42.1,
-   "tps": 126.22
+   "tps": 126.33
   },
   {
    "name": "Claude Haiku 5.5 (Low)",
@@ -1910,7 +1910,7 @@
    "intelligence": 29.5,
    "coding": null,
    "agentic": null,
-   "tps": 172.22
+   "tps": 176.85
   },
   {
    "name": "GLM-4.6V (Non-reasoning)",
@@ -1920,7 +1920,7 @@
    "intelligence": 8.4,
    "coding": null,
    "agentic": null,
-   "tps": 82.19
+   "tps": 95.1
   },
   {
    "name": "Solar Pro 2 (Preview) (Non-reasoning)",
@@ -1980,7 +1980,7 @@
    "intelligence": 26.4,
    "coding": null,
    "agentic": null,
-   "tps": 38.38
+   "tps": 43.25
   },
   {
    "name": "Mistral Small 3.2",
@@ -1990,7 +1990,7 @@
    "intelligence": 7,
    "coding": 12.5,
    "agentic": 1,
-   "tps": 44.81
+   "tps": 56.07
   },
   {
    "name": "DeepSeek V3 (Dec '24)",
@@ -2000,7 +2000,7 @@
    "intelligence": 8.5,
    "coding": 23,
    "agentic": 0.8,
-   "tps": 45.52
+   "tps": 43.47
   },
   {
    "name": "Claude Opus 5.5 (Low, Default Fallback)",
@@ -2010,7 +2010,7 @@
    "intelligence": 42.3,
    "coding": null,
    "agentic": null,
-   "tps": 79.99
+   "tps": 81.08
   },
   {
    "name": "Kimi K2",
@@ -2020,7 +2020,7 @@
    "intelligence": 12.7,
    "coding": null,
    "agentic": null,
-   "tps": 48.39
+   "tps": 46.85
   },
   {
    "name": "DeepSeek R1 Distill Qwen 1.5B",
@@ -2060,7 +2060,7 @@
    "intelligence": 6.4,
    "coding": 13.8,
    "agentic": 0.9,
-   "tps": 78.77
+   "tps": 81.19
   },
   {
    "name": "Sarvam 105B (High)",
@@ -2070,7 +2070,7 @@
    "intelligence": 8.8,
    "coding": null,
    "agentic": null,
-   "tps": 192.17
+   "tps": 195.14
   },
   {
    "name": "Llama 3.1 Instruct 405B",
@@ -2090,7 +2090,7 @@
    "intelligence": 6.6,
    "coding": null,
    "agentic": null,
-   "tps": 39.61
+   "tps": 40.01
   },
   {
    "name": "Qwen3.5 35B A3B (Reasoning)",
@@ -2100,7 +2100,7 @@
    "intelligence": 19.3,
    "coding": null,
    "agentic": null,
-   "tps": 147.13
+   "tps": 148.77
   },
   {
    "name": "JT-4.1 Flash 236B A21B (Reasoning)",
@@ -2120,7 +2120,7 @@
    "intelligence": 18.3,
    "coding": null,
    "agentic": null,
-   "tps": 52.29
+   "tps": 51.71
   },
   {
    "name": "Ring-flash-2.0",
@@ -2150,7 +2150,7 @@
    "intelligence": 23,
    "coding": 37.8,
    "agentic": null,
-   "tps": 87.92
+   "tps": 111.56
   },
   {
    "name": "Mistral Large 3",
@@ -2160,7 +2160,7 @@
    "intelligence": 9.3,
    "coding": 20.1,
    "agentic": 1,
-   "tps": 81.89
+   "tps": 85.31
   },
   {
    "name": "GPT-5.4 (Non-reasoning)",
@@ -2170,7 +2170,7 @@
    "intelligence": 18.2,
    "coding": null,
    "agentic": null,
-   "tps": 70.88
+   "tps": 74.82
   },
   {
    "name": "GPT-5.2 (Xhigh)",
@@ -2180,7 +2180,7 @@
    "intelligence": 30.4,
    "coding": null,
    "agentic": null,
-   "tps": 75.48
+   "tps": 80.59
   },
   {
    "name": "Apertus 70B Instruct",
@@ -2230,7 +2230,7 @@
    "intelligence": 22.8,
    "coding": 52.6,
    "agentic": 15.3,
-   "tps": 52.82
+   "tps": 57.18
   },
   {
    "name": "Grok-1",
@@ -2260,7 +2260,7 @@
    "intelligence": 24.7,
    "coding": 49.4,
    "agentic": null,
-   "tps": 112.22
+   "tps": 137.79
   },
   {
    "name": "Gemini 3.5 Flash (Medium)",
@@ -2270,7 +2270,7 @@
    "intelligence": 33.6,
    "coding": null,
    "agentic": null,
-   "tps": 201.53
+   "tps": 198.95
   },
   {
    "name": "Claude 4 Opus (Non-reasoning)",
@@ -2300,7 +2300,7 @@
    "intelligence": 19.4,
    "coding": null,
    "agentic": null,
-   "tps": 83.32
+   "tps": 80.8
   },
   {
    "name": "Mistral Large 2 (Nov '24)",
@@ -2320,7 +2320,7 @@
    "intelligence": 30.1,
    "coding": 72,
    "agentic": 29.3,
-   "tps": 39.34
+   "tps": 52.92
   },
   {
    "name": "PALM-2",
@@ -2340,7 +2340,7 @@
    "intelligence": 7.9,
    "coding": null,
    "agentic": null,
-   "tps": 27.7
+   "tps": 27.17
   },
   {
    "name": "Grok 4.20 0309 (Non-reasoning)",
@@ -2370,7 +2370,7 @@
    "intelligence": 42.4,
    "coding": null,
    "agentic": null,
-   "tps": 96.53
+   "tps": 113.99
   },
   {
    "name": "Gemma 4 E4B (Non-reasoning)",
@@ -2380,7 +2380,7 @@
    "intelligence": 7.5,
    "coding": null,
    "agentic": null,
-   "tps": 47.19
+   "tps": 45.36
   },
   {
    "name": "GPT-5.4 (Low)",
@@ -2390,7 +2390,7 @@
    "intelligence": 27.6,
    "coding": null,
    "agentic": null,
-   "tps": 72.1
+   "tps": 73.36
   },
   {
    "name": "Ling 3.1 Flash 1019",
@@ -2420,7 +2420,7 @@
    "intelligence": 31.9,
    "coding": null,
    "agentic": null,
-   "tps": 43.22
+   "tps": 44.49
   },
   {
    "name": "Jamba 1.5 Mini",
@@ -2450,7 +2450,7 @@
    "intelligence": 7,
    "coding": null,
    "agentic": null,
-   "tps": 129.14
+   "tps": 127.26
   },
   {
    "name": "Granite 4.0 350M",
@@ -2500,7 +2500,7 @@
    "intelligence": 17.5,
    "coding": 49,
    "agentic": 8.5,
-   "tps": 105.41
+   "tps": 103.97
   },
   {
    "name": "GPT-5.6 Luna (Medium)",
@@ -2510,7 +2510,7 @@
    "intelligence": 25,
    "coding": 50.7,
    "agentic": 23.9,
-   "tps": 125.45
+   "tps": 115.71
   },
   {
    "name": "Grok 4.7 (Xhigh)",
@@ -2520,7 +2520,7 @@
    "intelligence": 46.4,
    "coding": null,
    "agentic": null,
-   "tps": 92.66
+   "tps": 88.83
   },
   {
    "name": "Qwen3 1.7B (Reasoning)",
@@ -2540,7 +2540,7 @@
    "intelligence": 15.6,
    "coding": 34.7,
    "agentic": 1.6,
-   "tps": 369.71
+   "tps": 361.6
   },
   {
    "name": "Kimi Linear 48B A3B Instruct",
@@ -2580,7 +2580,7 @@
    "intelligence": 32.5,
    "coding": null,
    "agentic": null,
-   "tps": 91.52
+   "tps": 105.44
   },
   {
    "name": "Mistral Medium 3",
@@ -2590,7 +2590,7 @@
    "intelligence": 9,
    "coding": null,
    "agentic": null,
-   "tps": 46.27
+   "tps": 46.04
   },
   {
    "name": "LFM2.5-1.2B-Thinking",
@@ -2650,7 +2650,7 @@
    "intelligence": 22.9,
    "coding": 49.3,
    "agentic": 20.1,
-   "tps": 152.62
+   "tps": 196.39
   },
   {
    "name": "GPT-5.4 Pro (Xhigh)",
@@ -2670,7 +2670,7 @@
    "intelligence": 19.1,
    "coding": 45.3,
    "agentic": 14,
-   "tps": 76.54
+   "tps": 71.16
   },
   {
    "name": "Nova Lite",
@@ -2680,7 +2680,7 @@
    "intelligence": 6.7,
    "coding": null,
    "agentic": null,
-   "tps": 171.13
+   "tps": 174.61
   },
   {
    "name": "Seed-OSS-36B-Instruct",
@@ -2690,7 +2690,7 @@
    "intelligence": 12.1,
    "coding": null,
    "agentic": null,
-   "tps": 39.81
+   "tps": 38.84
   },
   {
    "name": "GPT-4.5 (Preview)",
@@ -2710,7 +2710,7 @@
    "intelligence": 24.9,
    "coding": null,
    "agentic": null,
-   "tps": 176.34
+   "tps": 186.11
   },
   {
    "name": "GLM-4.5-Air",
@@ -2720,7 +2720,7 @@
    "intelligence": 11.1,
    "coding": null,
    "agentic": null,
-   "tps": 79.13
+   "tps": 83.21
   },
   {
    "name": "Qwen3.5 2B (Reasoning)",
@@ -2760,7 +2760,7 @@
    "intelligence": 30.1,
    "coding": 58.7,
    "agentic": null,
-   "tps": 101.06
+   "tps": 104.11
   },
   {
    "name": "Granite 4.0 H Small",
@@ -2800,7 +2800,7 @@
    "intelligence": 40.2,
    "coding": 71.8,
    "agentic": 49.1,
-   "tps": 41.74
+   "tps": 41.62
   },
   {
    "name": "Grok 4.3 (Medium)",
@@ -2810,7 +2810,7 @@
    "intelligence": 24.8,
    "coding": null,
    "agentic": null,
-   "tps": 107.15
+   "tps": 95.69
   },
   {
    "name": "GPT-5 (Medium)",
@@ -2820,7 +2820,7 @@
    "intelligence": 22.9,
    "coding": null,
    "agentic": null,
-   "tps": 92.76
+   "tps": 101.06
   },
   {
    "name": "Grok 4",
@@ -2830,7 +2830,7 @@
    "intelligence": 22.5,
    "coding": null,
    "agentic": null,
-   "tps": 76.73
+   "tps": 76.86
   },
   {
    "name": "Sonar",
@@ -2850,7 +2850,7 @@
    "intelligence": 5.4,
    "coding": null,
    "agentic": null,
-   "tps": 23.89
+   "tps": 26.38
   },
   {
    "name": "DeepSeek R1 0528 Qwen3 8B",
@@ -2910,7 +2910,7 @@
    "intelligence": 13.4,
    "coding": 23,
    "agentic": null,
-   "tps": 182.15
+   "tps": 207.23
   },
   {
    "name": "Gemini 2.5 Pro Preview (Mar' 25)",
@@ -2930,7 +2930,7 @@
    "intelligence": 24.1,
    "coding": null,
    "agentic": null,
-   "tps": 97.65
+   "tps": 120.1
   },
   {
    "name": "Nemotron 3 Super 120B A12B (Reasoning)",
@@ -2940,7 +2940,7 @@
    "intelligence": 12.8,
    "coding": 37.7,
    "agentic": 1.7,
-   "tps": 165.64
+   "tps": 162.24
   },
   {
    "name": "GPT-6 Luna (Non-reasoning)",
@@ -2950,7 +2950,7 @@
    "intelligence": 18.5,
    "coding": null,
    "agentic": null,
-   "tps": 119.13
+   "tps": 120.16
   },
   {
    "name": "MiniCPM5-2B",
@@ -2970,7 +2970,7 @@
    "intelligence": 14.2,
    "coding": null,
    "agentic": null,
-   "tps": 107.97
+   "tps": 109.91
   },
   {
    "name": "Qwen3.5 4B (Reasoning)",
@@ -2980,7 +2980,7 @@
    "intelligence": 13.1,
    "coding": 22.6,
    "agentic": null,
-   "tps": 14.16
+   "tps": 21.05
   },
   {
    "name": "Magistral Medium 1",
@@ -3000,7 +3000,7 @@
    "intelligence": 15.3,
    "coding": null,
    "agentic": null,
-   "tps": 49.05
+   "tps": 47.68
   },
   {
    "name": "Qwen3.8 27B (Medium)",
@@ -3010,7 +3010,7 @@
    "intelligence": 27.6,
    "coding": 56.1,
    "agentic": 44.4,
-   "tps": 49.37
+   "tps": 46.57
   },
   {
    "name": "Kimi K3.1 Pro",
@@ -3020,7 +3020,7 @@
    "intelligence": 55.1,
    "coding": null,
    "agentic": null,
-   "tps": 67.59
+   "tps": 51.46
   },
   {
    "name": "Motif-2-12.7B-Reasoning",
@@ -3040,7 +3040,7 @@
    "intelligence": 15.2,
    "coding": 28.1,
    "agentic": null,
-   "tps": 152.07
+   "tps": 145.5
   },
   {
    "name": "Ministral 3 3B",
@@ -3080,7 +3080,7 @@
    "intelligence": 30.3,
    "coding": null,
    "agentic": null,
-   "tps": 338.61
+   "tps": 364.34
   },
   {
    "name": "Qwen3.7 Max",
@@ -3090,7 +3090,7 @@
    "intelligence": 29.5,
    "coding": 66,
    "agentic": 22.5,
-   "tps": 201.92
+   "tps": 202.19
   },
   {
    "name": "GLM-4.6 (Reasoning)",
@@ -3100,7 +3100,7 @@
    "intelligence": 18.5,
    "coding": 45.8,
    "agentic": null,
-   "tps": 33.49
+   "tps": 33.38
   },
   {
    "name": "GPT-4",
@@ -3120,7 +3120,7 @@
    "intelligence": 9.9,
    "coding": null,
    "agentic": null,
-   "tps": 205.59
+   "tps": 203.51
   },
   {
    "name": "Llama 2 Chat 13B",
@@ -3140,7 +3140,7 @@
    "intelligence": 33.8,
    "coding": 71.5,
    "agentic": 29.5,
-   "tps": 81.72
+   "tps": 81.99
   },
   {
    "name": "Hermes 4 - Llama-3.1 70B (Reasoning)",
@@ -3160,7 +3160,7 @@
    "intelligence": 19.5,
    "coding": 39.6,
    "agentic": null,
-   "tps": 162.02
+   "tps": 112.72
   },
   {
    "name": "Ling-3.0-flash-Fin",
@@ -3200,7 +3200,7 @@
    "intelligence": 17,
    "coding": null,
    "agentic": null,
-   "tps": 67.82
+   "tps": 67.45
   },
   {
    "name": "Gemma 4 26B A4B (Reasoning)",
@@ -3210,7 +3210,7 @@
    "intelligence": 16.7,
    "coding": 39.3,
    "agentic": 2.9,
-   "tps": 89.04
+   "tps": 95.64
   },
   {
    "name": "DeepSeek V4 Pro 0424 (Non-reasoning)",
@@ -3220,7 +3220,7 @@
    "intelligence": 20.8,
    "coding": null,
    "agentic": null,
-   "tps": 93.71
+   "tps": 107.13
   },
   {
    "name": "NVIDIA Nemotron Nano 12B v2 VL (Reasoning)",
@@ -3240,7 +3240,7 @@
    "intelligence": 39.2,
    "coding": 76.3,
    "agentic": 39.7,
-   "tps": 75.95
+   "tps": 75.34
   },
   {
    "name": "GPT-5.5 (Non-reasoning)",
@@ -3250,7 +3250,7 @@
    "intelligence": 23.2,
    "coding": 56.5,
    "agentic": null,
-   "tps": 78.57
+   "tps": 79.8
   },
   {
    "name": "Qwen3.5 Omni Flash",
@@ -3260,7 +3260,7 @@
    "intelligence": 12.5,
    "coding": null,
    "agentic": null,
-   "tps": 231.68
+   "tps": 234.58
   },
   {
    "name": "GPT-6 Luna (Max)",
@@ -3270,7 +3270,7 @@
    "intelligence": 38.1,
    "coding": null,
    "agentic": null,
-   "tps": 140.34
+   "tps": 135.05
   },
   {
    "name": "GLM-4.7 (Reasoning)",
@@ -3280,7 +3280,7 @@
    "intelligence": 22.2,
    "coding": 45.3,
    "agentic": null,
-   "tps": 35.75
+   "tps": 36.42
   },
   {
    "name": "Nova 2.0 Lite (Low)",
@@ -3290,7 +3290,7 @@
    "intelligence": 11.8,
    "coding": null,
    "agentic": null,
-   "tps": 177.59
+   "tps": 180.2
   },
   {
    "name": "Magistral Small 1.2",
@@ -3300,7 +3300,7 @@
    "intelligence": 8.6,
    "coding": 14.7,
    "agentic": null,
-   "tps": 76.37
+   "tps": 77.17
   },
   {
    "name": "Gemma 4 26B A4B (Non-reasoning)",
@@ -3310,7 +3310,7 @@
    "intelligence": 13.1,
    "coding": null,
    "agentic": null,
-   "tps": 99.11
+   "tps": 114
   },
   {
    "name": "Claude Opus 5 (High)",
@@ -3320,7 +3320,7 @@
    "intelligence": 48.1,
    "coding": 76.5,
    "agentic": 52.3,
-   "tps": 53.8
+   "tps": 53.82
   },
   {
    "name": "Ministral 3 14B",
@@ -3330,7 +3330,7 @@
    "intelligence": 6,
    "coding": 14.4,
    "agentic": 1.1,
-   "tps": 83.05
+   "tps": 70.08
   },
   {
    "name": "K-EXAONE (Reasoning)",
@@ -3370,7 +3370,7 @@
    "intelligence": 25.7,
    "coding": 52.9,
    "agentic": 23.5,
-   "tps": 225.53
+   "tps": 222.88
   },
   {
    "name": "GPT-4.1 nano",
@@ -3380,7 +3380,7 @@
    "intelligence": 7.8,
    "coding": 11.1,
    "agentic": null,
-   "tps": 218.84
+   "tps": 230.92
   },
   {
    "name": "Llama 3.1 Nemotron Instruct 70B",
@@ -3400,7 +3400,7 @@
    "intelligence": 6.9,
    "coding": 5.4,
    "agentic": null,
-   "tps": 136.25
+   "tps": 140.56
   },
   {
    "name": "LFM2 2.6B",
@@ -3420,7 +3420,7 @@
    "intelligence": 24.7,
    "coding": null,
    "agentic": null,
-   "tps": 294.89
+   "tps": 256.14
   },
   {
    "name": "Gemini 3.8 Flash (Medium)",
@@ -3450,7 +3450,7 @@
    "intelligence": 9.7,
    "coding": 21.2,
    "agentic": 0.8,
-   "tps": 117.34
+   "tps": 135.6
   },
   {
    "name": "Command-R+ (Apr '24)",
@@ -3490,7 +3490,7 @@
    "intelligence": 12.3,
    "coding": null,
    "agentic": null,
-   "tps": 734.82
+   "tps": 710.49
   },
   {
    "name": "GPT-4 Turbo",
@@ -3500,7 +3500,7 @@
    "intelligence": 7,
    "coding": 21.5,
    "agentic": null,
-   "tps": 32.96
+   "tps": 40.61
   },
   {
    "name": "Nova 2.0 Lite (Non-reasoning)",
@@ -3510,7 +3510,7 @@
    "intelligence": 8.7,
    "coding": null,
    "agentic": null,
-   "tps": 181.59
+   "tps": 174.34
   },
   {
    "name": "NVIDIA Nemotron 3 Nano 30B A3B (Reasoning)",
@@ -3520,7 +3520,7 @@
    "intelligence": 8.9,
    "coding": 14.4,
    "agentic": 1,
-   "tps": 233.17
+   "tps": 266.94
   },
   {
    "name": "DeepSeek V4 Flash Vision (Max)",
@@ -3530,7 +3530,7 @@
    "intelligence": 34.8,
    "coding": 65,
    "agentic": 47.5,
-   "tps": 183.92
+   "tps": 180.15
   },
   {
    "name": "DeepSeek LLM 67B Chat (V1)",
@@ -3580,7 +3580,7 @@
    "intelligence": 34,
    "coding": 69.2,
    "agentic": 29,
-   "tps": 202.36
+   "tps": 196.88
   },
   {
    "name": "Gemini 3 Flash Preview (Non-reasoning)",
@@ -3590,7 +3590,7 @@
    "intelligence": 17.9,
    "coding": null,
    "agentic": null,
-   "tps": 210.32
+   "tps": 211.09
   },
   {
    "name": "Jamba 1.7 Large",
@@ -3610,7 +3610,7 @@
    "intelligence": 38.8,
    "coding": 72.4,
    "agentic": 41.2,
-   "tps": 71.79
+   "tps": 62.2
   },
   {
    "name": "Mistral Saba",
@@ -3660,7 +3660,7 @@
    "intelligence": 28.3,
    "coding": 65.1,
    "agentic": 28.1,
-   "tps": 73.92
+   "tps": 73.35
   },
   {
    "name": "Gemini 3 Flash Preview (Reasoning)",
@@ -3670,7 +3670,7 @@
    "intelligence": 26.3,
    "coding": null,
    "agentic": null,
-   "tps": 215.72
+   "tps": 217.95
   },
   {
    "name": "Claude Haiku 5.5 (Max)",
@@ -3680,7 +3680,7 @@
    "intelligence": 43.4,
    "coding": null,
    "agentic": null,
-   "tps": 233.82
+   "tps": 233.95
   },
   {
    "name": "GPT-6 Luna (High)",
@@ -3690,7 +3690,7 @@
    "intelligence": 32.9,
    "coding": null,
    "agentic": null,
-   "tps": 122.26
+   "tps": 120.72
   },
   {
    "name": "Nemotron 3.5 Bolt 74B-A9B",
@@ -3720,7 +3720,7 @@
    "intelligence": 26.2,
    "coding": 58.2,
    "agentic": 38.9,
-   "tps": 50.05
+   "tps": 48.45
   },
   {
    "name": "Solar Open2 250B",
@@ -3740,7 +3740,7 @@
    "intelligence": 11.1,
    "coding": 26.5,
    "agentic": 4.4,
-   "tps": 57.48
+   "tps": 57.2
   },
   {
    "name": "Qwen3 30B A3B 2507 Instruct",
@@ -3750,7 +3750,7 @@
    "intelligence": 7.5,
    "coding": null,
    "agentic": null,
-   "tps": 197.71
+   "tps": 200.79
   },
   {
    "name": "GPT-5 (Low)",
@@ -3760,7 +3760,7 @@
    "intelligence": 20.8,
    "coding": null,
    "agentic": null,
-   "tps": 77.59
+   "tps": 99.47
   },
   {
    "name": "Celeris-1",
@@ -3770,7 +3770,7 @@
    "intelligence": 6.3,
    "coding": 14.4,
    "agentic": 0.7,
-   "tps": 1548.76
+   "tps": 1521.15
   },
   {
    "name": "Qwen3 Max Thinking",
@@ -3810,7 +3810,7 @@
    "intelligence": 34.2,
    "coding": 67.1,
    "agentic": 36.7,
-   "tps": 118.46
+   "tps": 119.16
   },
   {
    "name": "GLM-4.7 (Non-reasoning)",
@@ -3820,7 +3820,7 @@
    "intelligence": 17.4,
    "coding": null,
    "agentic": null,
-   "tps": 36.17
+   "tps": 36.4
   },
   {
    "name": "A.X-K2",
@@ -3860,7 +3860,7 @@
    "intelligence": 7.5,
    "coding": null,
    "agentic": null,
-   "tps": 41.17
+   "tps": 42.86
   },
   {
    "name": "MiMo-V2-Flash (Non-reasoning)",
@@ -3890,7 +3890,7 @@
    "intelligence": 36,
    "coding": 68.8,
    "agentic": 41.3,
-   "tps": 101.49
+   "tps": 100.49
   },
   {
    "name": "Claude Instant",
@@ -3920,7 +3920,7 @@
    "intelligence": 16.7,
    "coding": null,
    "agentic": null,
-   "tps": 143.71
+   "tps": 185.67
   },
   {
    "name": "GPT-5.2 (Medium)",
@@ -3950,7 +3950,7 @@
    "intelligence": 18.2,
    "coding": 41.9,
    "agentic": 13.1,
-   "tps": 131.48
+   "tps": 131.42
   },
   {
    "name": "GPT-5.6 Luna (Xhigh)",
@@ -3960,7 +3960,7 @@
    "intelligence": 34.6,
    "coding": 68.6,
    "agentic": 38.7,
-   "tps": 121.84
+   "tps": 121.68
   },
   {
    "name": "Gemini 2.5 Flash Preview (Sep '25) (Non-reasoning)",
@@ -3990,7 +3990,7 @@
    "intelligence": 7.8,
    "coding": null,
    "agentic": null,
-   "tps": 4.54
+   "tps": 5.18
   },
   {
    "name": "GPT-5.4 nano (Medium)",
@@ -4000,7 +4000,7 @@
    "intelligence": 20,
    "coding": null,
    "agentic": null,
-   "tps": 168.15
+   "tps": 178.56
   },
   {
    "name": "Apertus 8B Instruct",
@@ -4010,7 +4010,7 @@
    "intelligence": 4.8,
    "coding": null,
    "agentic": null,
-   "tps": 126.87
+   "tps": 141.31
   },
   {
    "name": "DeepSeek V4 Flash 0420 (High)",
@@ -4050,7 +4050,7 @@
    "intelligence": 40.9,
    "coding": 76.3,
    "agentic": 40.2,
-   "tps": 136.87
+   "tps": 132.17
   },
   {
    "name": "GPT-5.6 Sol (High)",
@@ -4060,7 +4060,7 @@
    "intelligence": 42.3,
    "coding": 77.2,
    "agentic": 44.2,
-   "tps": 84.33
+   "tps": 82.5
   },
   {
    "name": "GPT-3.5 Turbo (0613)",
@@ -4080,7 +4080,7 @@
    "intelligence": 7.7,
    "coding": null,
    "agentic": null,
-   "tps": 141.17
+   "tps": 139.95
   },
   {
    "name": "Qwen3.6 27B (Reasoning)",
@@ -4090,7 +4090,7 @@
    "intelligence": 21.4,
    "coding": 53.7,
    "agentic": 18.5,
-   "tps": 57.26
+   "tps": 57.29
   },
   {
    "name": "Nemotron 3 Nano Omni 30B A3B Reasoning",
@@ -4100,7 +4100,7 @@
    "intelligence": 10.3,
    "coding": 13.8,
    "agentic": null,
-   "tps": 234.57
+   "tps": 230.42
   },
   {
    "name": "Hy3-preview (Reasoning)",
@@ -4120,7 +4120,7 @@
    "intelligence": 25.8,
    "coding": 60.8,
    "agentic": 21,
-   "tps": 61.5
+   "tps": 83.05
   },
   {
    "name": "Gemini 1.0 Pro",
@@ -4140,7 +4140,7 @@
    "intelligence": 39.9,
    "coding": 71.9,
    "agentic": 50.1,
-   "tps": 42.67
+   "tps": 41.47
   },
   {
    "name": "Solar Pro 2 (Preview) (Reasoning)",
@@ -4160,7 +4160,7 @@
    "intelligence": 12.5,
    "coding": null,
    "agentic": null,
-   "tps": 143.46
+   "tps": 157.69
   },
   {
    "name": "DeepSeek-Coder-V2",
@@ -4200,7 +4200,7 @@
    "intelligence": 14,
    "coding": 35.2,
    "agentic": 14,
-   "tps": 95.59
+   "tps": 96.89
   },
   {
    "name": "Claude 4.5 Sonnet (Reasoning)",
@@ -4210,7 +4210,7 @@
    "intelligence": 20.7,
    "coding": 52.1,
    "agentic": 15.8,
-   "tps": 47.39
+   "tps": 49.97
   },
   {
    "name": "Claude 4.5 Sonnet (Non-reasoning)",
@@ -4220,7 +4220,7 @@
    "intelligence": 19.3,
    "coding": null,
    "agentic": null,
-   "tps": 45.61
+   "tps": 46.66
   },
   {
    "name": "Granite 4.1 3B",
@@ -4250,7 +4250,7 @@
    "intelligence": 9.3,
    "coding": 16.3,
    "agentic": 0.6,
-   "tps": 50.58
+   "tps": 53.06
   },
   {
    "name": "Jamba 1.6 Large",
@@ -4270,7 +4270,7 @@
    "intelligence": 24.2,
    "coding": null,
    "agentic": null,
-   "tps": 66.16
+   "tps": 71.4
   },
   {
    "name": "GPT-6 Sol (Daybreak Blue, max)",
@@ -4300,7 +4300,7 @@
    "intelligence": 14.9,
    "coding": null,
    "agentic": null,
-   "tps": 34.66
+   "tps": 36.42
   },
   {
    "name": "Grok 4.3 (High)",
@@ -4310,7 +4310,7 @@
    "intelligence": 24.9,
    "coding": 42.2,
    "agentic": 15.5,
-   "tps": 116.5
+   "tps": 95.87
   },
   {
    "name": "Olmo 3.1 32B Instruct",
@@ -4340,7 +4340,7 @@
    "intelligence": 5.5,
    "coding": 9.7,
    "agentic": 0.6,
-   "tps": 115.31
+   "tps": 119.17
   },
   {
    "name": "Claude Sonnet 5.5 (Xhigh, Default Fallback)",
@@ -4350,7 +4350,7 @@
    "intelligence": 51.9,
    "coding": null,
    "agentic": null,
-   "tps": 108.05
+   "tps": 109.9
   },
   {
    "name": "Llama 3.3 Instruct 70B",
@@ -4360,7 +4360,7 @@
    "intelligence": 7.7,
    "coding": 11.9,
    "agentic": null,
-   "tps": 90.36
+   "tps": 89.4
   },
   {
    "name": "Nemotron Cascade 2 30B A3B",
@@ -4390,7 +4390,7 @@
    "intelligence": 41.8,
    "coding": 74.3,
    "agentic": 41.9,
-   "tps": 63.04
+   "tps": 59.57
   },
   {
    "name": "Muse Spark 1.3 (Max)",
@@ -4400,7 +4400,7 @@
    "intelligence": 48.1,
    "coding": 75.8,
    "agentic": 55.5,
-   "tps": 140.56
+   "tps": 157.31
   },
   {
    "name": "Claude Sonnet 5 (Xhigh)",
@@ -4410,7 +4410,7 @@
    "intelligence": 34.4,
    "coding": null,
    "agentic": null,
-   "tps": 70.09
+   "tps": 68.24
   },
   {
    "name": "Qwen3.8-Flash-Next",
@@ -4420,7 +4420,7 @@
    "intelligence": 39.8,
    "coding": 73.1,
    "agentic": 53.6,
-   "tps": 51.61
+   "tps": 51.94
   },
   {
    "name": "Claude Fable 5.1 (Xhigh, Default Fallback)",
@@ -4430,7 +4430,7 @@
    "intelligence": 53.2,
    "coding": 80.7,
    "agentic": 57.2,
-   "tps": 63.71
+   "tps": 62.73
   },
   {
    "name": "GPT-5.6 Terra (Non-reasoning)",
@@ -4440,7 +4440,7 @@
    "intelligence": 20.8,
    "coding": 52.3,
    "agentic": 23.5,
-   "tps": 115.36
+   "tps": 115.11
   },
   {
    "name": "MiniMax M1 80k",
@@ -4450,7 +4450,7 @@
    "intelligence": 11.7,
    "coding": null,
    "agentic": null,
-   "tps": 96.94
+   "tps": 107.44
   },
   {
    "name": "Llama 3.2 Instruct 90B (Vision)",
@@ -4480,7 +4480,7 @@
    "intelligence": 51.2,
    "coding": 79.1,
    "agentic": 53.1,
-   "tps": 59.01
+   "tps": 58.21
   },
   {
    "name": "Qwen3 8B (Reasoning)",
@@ -4510,7 +4510,7 @@
    "intelligence": 38,
    "coding": 70.6,
    "agentic": 41.4,
-   "tps": 116.6
+   "tps": 121.67
   },
   {
    "name": "K2 Horizon 0.9B",
@@ -4550,7 +4550,7 @@
    "intelligence": 10.2,
    "coding": 20.2,
    "agentic": null,
-   "tps": 156.28
+   "tps": 172.15
   },
   {
    "name": "Phi-4 Mini Instruct",
@@ -4560,7 +4560,7 @@
    "intelligence": 6.3,
    "coding": 3.8,
    "agentic": null,
-   "tps": 45.55
+   "tps": 45.56
   },
   {
    "name": "Grok Beta",
@@ -4590,7 +4590,7 @@
    "intelligence": 10,
    "coding": 20.9,
    "agentic": null,
-   "tps": 115.02
+   "tps": 118.66
   },
   {
    "name": "Ring-1T",
@@ -4620,7 +4620,7 @@
    "intelligence": 47.8,
    "coding": null,
    "agentic": null,
-   "tps": 49.13
+   "tps": 52.22
   },
   {
    "name": "Motif 3 (Beta)",
@@ -4650,7 +4650,7 @@
    "intelligence": 45.8,
    "coding": 75.7,
    "agentic": 38.8,
-   "tps": 54.06
+   "tps": 50.04
   },
   {
    "name": "Gemini 3 Deep Think",
@@ -4680,7 +4680,7 @@
    "intelligence": 23.5,
    "coding": 46.8,
    "agentic": null,
-   "tps": 80.63
+   "tps": 81.29
   },
   {
    "name": "Ling 3.1 Flash",
@@ -4690,7 +4690,7 @@
    "intelligence": 41.1,
    "coding": null,
    "agentic": null,
-   "tps": 214.1
+   "tps": 212.57
   },
   {
    "name": "Claude 4.5 Haiku (Reasoning)",
@@ -4700,7 +4700,7 @@
    "intelligence": 16.9,
    "coding": 43.9,
    "agentic": 8,
-   "tps": 93.41
+   "tps": 94.98
   },
   {
    "name": "Granite 4.0 H 350M",
@@ -4770,7 +4770,7 @@
    "intelligence": 13.1,
    "coding": null,
    "agentic": null,
-   "tps": 34.46
+   "tps": 34.86
   },
   {
    "name": "Qwen3.7 Plus",
@@ -4780,7 +4780,7 @@
    "intelligence": 25.2,
    "coding": 55.9,
    "agentic": 17.5,
-   "tps": 59.12
+   "tps": 57.04
   },
   {
    "name": "GPT-5.4 (Xhigh)",
@@ -4790,7 +4790,7 @@
    "intelligence": 39,
    "coding": 71.1,
    "agentic": null,
-   "tps": 95.71
+   "tps": 117.33
   },
   {
    "name": "Gemma 3n E2B Instruct",
@@ -4830,7 +4830,7 @@
    "intelligence": 32.1,
    "coding": 63.3,
    "agentic": 34.6,
-   "tps": 123.53
+   "tps": 119.06
   },
   {
    "name": "Llama 3 Instruct 70B",
@@ -4850,7 +4850,7 @@
    "intelligence": 5.8,
    "coding": null,
    "agentic": null,
-   "tps": 203.93
+   "tps": 202.03
   },
   {
    "name": "Devstral Medium",
@@ -4930,7 +4930,7 @@
    "intelligence": 6.5,
    "coding": 8.2,
    "agentic": 0.5,
-   "tps": 102.66
+   "tps": 114.44
   },
   {
    "name": "Granite 4.2 8B",
@@ -4940,7 +4940,7 @@
    "intelligence": 11.1,
    "coding": 22.4,
    "agentic": 1.3,
-   "tps": 73.57
+   "tps": 41.38
   },
   {
    "name": "GPT-5.4 mini (Non-reasoning)",
@@ -4950,7 +4950,7 @@
    "intelligence": 11.1,
    "coding": null,
    "agentic": null,
-   "tps": 165.62
+   "tps": 241.61
   },
   {
    "name": "ERNIE 4.5 300B A47B",
@@ -4980,7 +4980,7 @@
    "intelligence": 34.5,
    "coding": null,
    "agentic": null,
-   "tps": 184.34
+   "tps": 174.17
   },
   {
    "name": "Molmo 7B-D",
@@ -5000,7 +5000,7 @@
    "intelligence": 7.2,
    "coding": 15.3,
    "agentic": 0.9,
-   "tps": 22.19
+   "tps": 28.46
   },
   {
    "name": "Qwen3.8 27B (Xhigh)",
@@ -5010,7 +5010,7 @@
    "intelligence": 33.7,
    "coding": 68.1,
    "agentic": 45.8,
-   "tps": 44.66
+   "tps": 43.98
   },
   {
    "name": "Motif 3",
@@ -5050,7 +5050,7 @@
    "intelligence": 45.4,
    "coding": 76.2,
    "agentic": 56,
-   "tps": 41.8
+   "tps": 41.57
   },
   {
    "name": "GPT-5.5 (High)",
@@ -5060,7 +5060,7 @@
    "intelligence": 37,
    "coding": 71.6,
    "agentic": 34.3,
-   "tps": 82.18
+   "tps": 82.57
   },
   {
    "name": "Claude Sonnet 5.5 (Max, Default Fallback)",
@@ -5070,7 +5070,7 @@
    "intelligence": 56,
    "coding": null,
    "agentic": null,
-   "tps": 133.45
+   "tps": 140.93
   },
   {
    "name": "Llama 3.1 Nemotron Nano 4B v1.1 (Reasoning)",
@@ -5100,7 +5100,7 @@
    "intelligence": 25.3,
    "coding": 58.8,
    "agentic": 24.1,
-   "tps": 83.98
+   "tps": 80.74
   },
   {
    "name": "GPT-6.1 Sol (Max)",
@@ -5110,7 +5110,7 @@
    "intelligence": 51.8,
    "coding": null,
    "agentic": null,
-   "tps": 58.82
+   "tps": 65.9
   },
   {
    "name": "DeepSeek R1 Distill Qwen 14B",
@@ -5210,7 +5210,7 @@
    "intelligence": 7.7,
    "coding": null,
    "agentic": null,
-   "tps": 26.86
+   "tps": 24.04
   },
   {
    "name": "o1-mini",
@@ -5240,7 +5240,7 @@
    "intelligence": 6.7,
    "coding": 11.4,
    "agentic": null,
-   "tps": 94.63
+   "tps": 105.67
   },
   {
    "name": "Trinity Large Thinking",
@@ -5250,7 +5250,7 @@
    "intelligence": 10.8,
    "coding": 25.8,
    "agentic": 1,
-   "tps": 357.13
+   "tps": 345.56
   },
   {
    "name": "DeepHermes 3 - Llama-3.1 8B Preview (Non-reasoning)",
@@ -5270,7 +5270,7 @@
    "intelligence": 7.8,
    "coding": 16.2,
    "agentic": 1.4,
-   "tps": 140.1
+   "tps": 146.41
   },
   {
    "name": "Claude Opus 5 (Max)",
@@ -5280,7 +5280,7 @@
    "intelligence": 50.8,
    "coding": 78,
    "agentic": 56.5,
-   "tps": 52.53
+   "tps": 52.27
   },
   {
    "name": "Qwen3 Omni 30B A3B (Reasoning)",
@@ -5290,7 +5290,7 @@
    "intelligence": 7.8,
    "coding": null,
    "agentic": null,
-   "tps": 102.47
+   "tps": 102.62
   },
   {
    "name": "Qwen2.5 Max",
@@ -5310,7 +5310,7 @@
    "intelligence": 31.7,
    "coding": null,
    "agentic": null,
-   "tps": 67.9
+   "tps": 65.72
   },
   {
    "name": "Kimi K2.5 (Non-reasoning)",
@@ -5320,7 +5320,7 @@
    "intelligence": 19.4,
    "coding": null,
    "agentic": null,
-   "tps": 53.49
+   "tps": 52.16
   },
   {
    "name": "GPT-5.4 mini (Xhigh)",
@@ -5330,7 +5330,7 @@
    "intelligence": 24.1,
    "coding": 56.1,
    "agentic": 17.9,
-   "tps": 236.17
+   "tps": 218.17
   },
   {
    "name": "K2 Horizon 375B A23B",
@@ -5340,7 +5340,7 @@
    "intelligence": 30.5,
    "coding": 61.5,
    "agentic": 40,
-   "tps": 906.34
+   "tps": 971.23
   },
   {
    "name": "Claude Sonnet 5.5 (Low, Default Fallback)",
@@ -5350,7 +5350,7 @@
    "intelligence": 35.9,
    "coding": null,
    "agentic": null,
-   "tps": 104.22
+   "tps": 106.34
   },
   {
    "name": "Gemini 3.1 Pro Preview",
@@ -5360,7 +5360,7 @@
    "intelligence": 29.7,
    "coding": 68.8,
    "agentic": 8.2,
-   "tps": 132.24
+   "tps": 134.2
   },
   {
    "name": "Qwen3 235B A22B (Reasoning)",
@@ -5380,7 +5380,7 @@
    "intelligence": 9.9,
    "coding": null,
    "agentic": null,
-   "tps": 113.82
+   "tps": 107.03
   },
   {
    "name": "DeepSeek-V2.5 (Dec '24)",
@@ -5410,7 +5410,7 @@
    "intelligence": 42.1,
    "coding": 76.7,
    "agentic": 43.2,
-   "tps": 125.63
+   "tps": 135.37
   },
   {
    "name": "Gemma 3n E4B Instruct Preview (May '25)",
@@ -5430,7 +5430,7 @@
    "intelligence": 22,
    "coding": null,
    "agentic": null,
-   "tps": 119.41
+   "tps": 121.83
   },
   {
    "name": "MiMo-V2-Flash (Reasoning)",
@@ -5450,7 +5450,7 @@
    "intelligence": 30.4,
    "coding": 59.4,
    "agentic": 26.3,
-   "tps": 102.21
+   "tps": 104.84
   },
   {
    "name": "Qwen3 32B (Non-reasoning)",
@@ -5460,7 +5460,7 @@
    "intelligence": 7.3,
    "coding": null,
    "agentic": null,
-   "tps": 60.01
+   "tps": 60.5
   },
   {
    "name": "GPT-6 Luna (Low)",
@@ -5470,7 +5470,7 @@
    "intelligence": 21.5,
    "coding": null,
    "agentic": null,
-   "tps": 114.57
+   "tps": 117.47
   },
   {
    "name": "Grok 4.6 (Low)",
@@ -5480,7 +5480,7 @@
    "intelligence": 35.1,
    "coding": 66.3,
    "agentic": 41.2,
-   "tps": 78.77
+   "tps": 74.69
   },
   {
    "name": "GPT-4o (Nov '24)",
@@ -5490,7 +5490,7 @@
    "intelligence": 8.4,
    "coding": null,
    "agentic": null,
-   "tps": 182.01
+   "tps": 180.94
   },
   {
    "name": "G9v3-39A5B",
@@ -5510,7 +5510,7 @@
    "intelligence": 11.7,
    "coding": null,
    "agentic": null,
-   "tps": 167.99
+   "tps": 168.58
   },
   {
    "name": "Claude 4.5 Haiku (Non-reasoning)",
@@ -5520,7 +5520,7 @@
    "intelligence": 15.4,
    "coding": null,
    "agentic": null,
-   "tps": 83.59
+   "tps": 85.11
   },
   {
    "name": "GPT-5 mini (Medium)",
@@ -5530,7 +5530,7 @@
    "intelligence": 20.6,
    "coding": null,
    "agentic": null,
-   "tps": 121.08
+   "tps": 111.47
   },
   {
    "name": "GPT-5 (Minimal)",
@@ -5540,7 +5540,7 @@
    "intelligence": 11.4,
    "coding": null,
    "agentic": null,
-   "tps": 91.61
+   "tps": 81.2
   },
   {
    "name": "DiffusionGemma 26B A4B",
@@ -5560,7 +5560,7 @@
    "intelligence": 26,
    "coding": 39.4,
    "agentic": 16.6,
-   "tps": 154.74
+   "tps": 158.38
   },
   {
    "name": "Qwen Chat 14B",
@@ -5590,7 +5590,7 @@
    "intelligence": 47.6,
    "coding": null,
    "agentic": null,
-   "tps": 103.47
+   "tps": 123.2
   },
   {
    "name": "Gemini 2.0 Pro Experimental (Feb '25)",
@@ -5610,7 +5610,7 @@
    "intelligence": 25.7,
    "coding": null,
    "agentic": null,
-   "tps": 116.57
+   "tps": 120.32
   },
   {
    "name": "DeepSeek Coder V2 Lite Instruct",
@@ -5650,7 +5650,7 @@
    "intelligence": 30.7,
    "coding": 60.9,
    "agentic": null,
-   "tps": 77.65
+   "tps": 81.46
   },
   {
    "name": "Step 3.5 Flash",
@@ -5660,7 +5660,7 @@
    "intelligence": 16.6,
    "coding": null,
    "agentic": null,
-   "tps": 138.92
+   "tps": 169.21
   },
   {
    "name": "GLM-4.7-Flash (Non-reasoning)",
@@ -5670,7 +5670,7 @@
    "intelligence": 10.6,
    "coding": null,
    "agentic": null,
-   "tps": 101.27
+   "tps": 113.84
   },
   {
    "name": "Olmo 3 32B Think",
@@ -5700,7 +5700,7 @@
    "intelligence": 44.3,
    "coding": 76.8,
    "agentic": 53,
-   "tps": 80.86
+   "tps": 76.45
   },
   {
    "name": "gpt-oss-120b (Low)",
@@ -5710,7 +5710,7 @@
    "intelligence": 10.2,
    "coding": 21.2,
    "agentic": null,
-   "tps": 263.47
+   "tps": 264.84
   },
   {
    "name": "o3-pro",
@@ -5750,7 +5750,7 @@
    "intelligence": 34.3,
    "coding": null,
    "agentic": null,
-   "tps": 90.2
+   "tps": 91
   },
   {
    "name": "Devstral Small (May '25)",
@@ -5790,7 +5790,7 @@
    "intelligence": 14.7,
    "coding": 43.4,
    "agentic": 4.2,
-   "tps": 35.62
+   "tps": 35.21
   },
   {
    "name": "Claude Fable 5 (Max, Opus 4.8 Fallback)",
@@ -5800,7 +5800,7 @@
    "intelligence": 49.6,
    "coding": 76.5,
    "agentic": 50.7,
-   "tps": 67.77
+   "tps": 67.49
   },
   {
    "name": "GLM-5.3 (Max)",
@@ -5810,7 +5810,7 @@
    "intelligence": 44.8,
    "coding": 74.8,
    "agentic": 53.1,
-   "tps": 86.46
+   "tps": 98.22
   },
   {
    "name": "Qwen3 VL 30B A3B (Reasoning)",
@@ -5870,7 +5870,7 @@
    "intelligence": 13.9,
    "coding": 33.2,
    "agentic": null,
-   "tps": 52.44
+   "tps": 62.1
   },
   {
    "name": "GPT-5.1 (Non-reasoning)",
@@ -5880,7 +5880,7 @@
    "intelligence": 13.3,
    "coding": null,
    "agentic": null,
-   "tps": 96
+   "tps": 113.62
   },
   {
    "name": "Gemini 3 Pro Preview (High)",
@@ -5920,7 +5920,7 @@
    "intelligence": 11.2,
    "coding": null,
    "agentic": null,
-   "tps": 89.33
+   "tps": 86.31
   },
   {
    "name": "MiniCPM5-1B (Non-reasoning)",
@@ -5940,7 +5940,7 @@
    "intelligence": 52.6,
    "coding": null,
    "agentic": null,
-   "tps": 78.13
+   "tps": 80.91
   },
   {
    "name": "Qwen3 VL 32B (Reasoning)",
@@ -5960,7 +5960,7 @@
    "intelligence": 7.4,
    "coding": null,
    "agentic": null,
-   "tps": 41.8
+   "tps": 43.65
   },
   {
    "name": "GPT-6 Sol (Non-reasoning)",
@@ -5970,7 +5970,7 @@
    "intelligence": 28.5,
    "coding": null,
    "agentic": null,
-   "tps": 99.12
+   "tps": 109.34
   },
   {
    "name": "MiniMax-M3.1-Flash",
@@ -5980,7 +5980,7 @@
    "intelligence": 42.7,
    "coding": null,
    "agentic": null,
-   "tps": 109.06
+   "tps": 116.19
   },
   {
    "name": "Granite 4.1 30B",
@@ -6000,7 +6000,7 @@
    "intelligence": 20.4,
    "coding": null,
    "agentic": null,
-   "tps": 98.07
+   "tps": 104.43
   },
   {
    "name": "GPT-5.4 nano (Xhigh)",
@@ -6010,7 +6010,7 @@
    "intelligence": 20.7,
    "coding": 56.1,
    "agentic": 16,
-   "tps": 168.29
+   "tps": 172.56
   },
   {
    "name": "Muse Spark 1.3 (Xhigh)",
@@ -6020,7 +6020,7 @@
    "intelligence": 45.1,
    "coding": 76.5,
    "agentic": 51.5,
-   "tps": 298.64
+   "tps": 303.5
   },
   {
    "name": "Claude Sonnet 5 (Non-reasoning, High)",
@@ -6030,7 +6030,7 @@
    "intelligence": 23.2,
    "coding": 66.4,
    "agentic": null,
-   "tps": 67.65
+   "tps": 66.15
   },
   {
    "name": "Qwen3 VL 235B A22B Instruct",
@@ -6040,7 +6040,7 @@
    "intelligence": 9.9,
    "coding": null,
    "agentic": null,
-   "tps": 40.69
+   "tps": 43.83
   },
   {
    "name": "Muse Spark 1.1 (Xhigh)",
@@ -6050,7 +6050,7 @@
    "intelligence": 33.7,
    "coding": 71.3,
    "agentic": 25.8,
-   "tps": 295.84
+   "tps": 290.19
   },
   {
    "name": "DeepSeek V3.2 (Reasoning)",
@@ -6090,7 +6090,7 @@
    "intelligence": 8.9,
    "coding": null,
    "agentic": null,
-   "tps": 42.04
+   "tps": 45.72
   },
   {
    "name": "DeepSeek V4 Flash 0420 (Max)",
@@ -6100,7 +6100,7 @@
    "intelligence": 24.2,
    "coding": 56.2,
    "agentic": 22.2,
-   "tps": 50.42
+   "tps": 60.58
   },
   {
    "name": "Claude 3.7 Sonnet (Non-reasoning)",
@@ -6120,7 +6120,7 @@
    "intelligence": 47,
    "coding": 77.4,
    "agentic": 50.2,
-   "tps": 85.93
+   "tps": 81.71
   },
   {
    "name": "Solar Mini",
@@ -6140,7 +6140,7 @@
    "intelligence": 44,
    "coding": 78.3,
    "agentic": 47.4,
-   "tps": 82.48
+   "tps": 80.94
   },
   {
    "name": "GPT-6 Sol (Xhigh)",
@@ -6150,7 +6150,7 @@
    "intelligence": 44.2,
    "coding": null,
    "agentic": null,
-   "tps": 99.88
+   "tps": 111.6
   },
   {
    "name": "Qwen3 Coder 30B A3B Instruct",
@@ -6160,7 +6160,7 @@
    "intelligence": 9.6,
    "coding": null,
    "agentic": null,
-   "tps": 263.07
+   "tps": 253.06
   },
   {
    "name": "K2-V2 (Low)",
@@ -6190,7 +6190,7 @@
    "intelligence": 5.6,
    "coding": null,
    "agentic": null,
-   "tps": 86.7
+   "tps": 87.48
   },
   {
    "name": "DeepSeek V4.1 Flash (Max)",
@@ -6200,7 +6200,7 @@
    "intelligence": 39.5,
    "coding": null,
    "agentic": null,
-   "tps": 179.33
+   "tps": 175.33
   },
   {
    "name": "GPT-5.6 Luna (Non-reasoning)",
@@ -6210,7 +6210,7 @@
    "intelligence": 15.5,
    "coding": 39.3,
    "agentic": 13.4,
-   "tps": 128.71
+   "tps": 120.93
   },
   {
    "name": "Mistral Medium 3.5",
@@ -6220,7 +6220,7 @@
    "intelligence": 14.2,
    "coding": 46.9,
    "agentic": 7,
-   "tps": 159.31
+   "tps": 162.46
   },
   {
    "name": "K2-V2 (Medium)",
@@ -6300,7 +6300,7 @@
    "intelligence": 56,
    "coding": null,
    "agentic": null,
-   "tps": 82.96
+   "tps": 82.03
   },
   {
    "name": "Claude Sonnet 4.6 (Max)",
@@ -6310,7 +6310,7 @@
    "intelligence": 30.1,
    "coding": 63,
    "agentic": 31.8,
-   "tps": 56.34
+   "tps": 58.03
   },
   {
    "name": "DeepSeek R1 Distill Qwen 32B",
@@ -6330,7 +6330,7 @@
    "intelligence": 13.9,
    "coding": null,
    "agentic": null,
-   "tps": 73.2
+   "tps": 75.44
   },
   {
    "name": "Gemini 2.0 Flash Thinking Experimental (Dec '24)",
@@ -6360,7 +6360,7 @@
    "intelligence": 50.9,
    "coding": 77.1,
    "agentic": 48.2,
-   "tps": 56.61
+   "tps": 60.42
   },
   {
    "name": "GPT-5 nano (High)",
@@ -6370,7 +6370,7 @@
    "intelligence": 13,
    "coding": null,
    "agentic": null,
-   "tps": 116.75
+   "tps": 151.83
   },
   {
    "name": "LFM2.5-2.6B",
@@ -6410,7 +6410,7 @@
    "intelligence": 26.5,
    "coding": null,
    "agentic": null,
-   "tps": 453.68
+   "tps": 450.95
   },
   {
    "name": "GPT-4o Realtime (Dec '24)",
@@ -6440,7 +6440,7 @@
    "intelligence": 20.1,
    "coding": 50.6,
    "agentic": 19.3,
-   "tps": 314.13
+   "tps": 244.9
   },
   {
    "name": "GPT-5.5 Instant (May 2026)",
@@ -6490,7 +6490,7 @@
    "intelligence": 6.7,
    "coding": null,
    "agentic": null,
-   "tps": 39.41
+   "tps": 52.82
   },
   {
    "name": "GPT-6.1 Sol (Low)",
@@ -6500,7 +6500,7 @@
    "intelligence": 42.1,
    "coding": null,
    "agentic": null,
-   "tps": 48.31
+   "tps": 49.75
   },
   {
    "name": "GLM-5.2 (Non-reasoning)",
@@ -6510,7 +6510,7 @@
    "intelligence": 22.4,
    "coding": 46.5,
    "agentic": null,
-   "tps": 181.43
+   "tps": 188.71
   },
   {
    "name": "o1-pro",
@@ -6540,7 +6540,7 @@
    "intelligence": 49.6,
    "coding": 76.7,
    "agentic": 46,
-   "tps": 54.44
+   "tps": 58.79
   },
   {
    "name": "GPT-4o (May '24)",
@@ -6550,7 +6550,7 @@
    "intelligence": 7.3,
    "coding": 24.2,
    "agentic": null,
-   "tps": 130.36
+   "tps": 124.31
   },
   {
    "name": "Muse Wonder Full (Max)",
@@ -6570,7 +6570,7 @@
    "intelligence": 40.7,
    "coding": 73.6,
    "agentic": 38.6,
-   "tps": 54.49
+   "tps": 51.96
   },
   {
    "name": "Cogito v2.1 (Reasoning)",
@@ -6590,7 +6590,7 @@
    "intelligence": 51.2,
    "coding": null,
    "agentic": null,
-   "tps": 83.82
+   "tps": 82.2
   },
   {
    "name": "GPT-5 (ChatGPT)",
@@ -6620,7 +6620,7 @@
    "intelligence": 16.6,
    "coding": 42.8,
    "agentic": 10.7,
-   "tps": 122.84
+   "tps": 122.23
   },
   {
    "name": "Solar Pro 2 (Reasoning)",
@@ -6670,7 +6670,7 @@
    "intelligence": 6.7,
    "coding": null,
    "agentic": null,
-   "tps": 78.3
+   "tps": 71.78
   },
   {
    "name": "Phi-4",
@@ -6680,7 +6680,7 @@
    "intelligence": 5.9,
    "coding": null,
    "agentic": null,
-   "tps": 37.99
+   "tps": 41.95
   },
   {
    "name": "Qwen3.5 35B A3B (Non-reasoning)",
@@ -6690,7 +6690,7 @@
    "intelligence": 15.1,
    "coding": 37,
    "agentic": null,
-   "tps": 166.65
+   "tps": 162.86
   },
   {
    "name": "Claude Sonnet 5 (Medium)",
@@ -6700,7 +6700,7 @@
    "intelligence": 28.1,
    "coding": null,
    "agentic": null,
-   "tps": 69.92
+   "tps": 68.58
   },
   {
    "name": "gpt-oss-120b (High)",
@@ -6710,7 +6710,7 @@
    "intelligence": 11.6,
    "coding": 30.4,
    "agentic": 3.7,
-   "tps": 211.71
+   "tps": 239.92
   },
   {
    "name": "DeepSeek V4.1 Flash 1017 (Max)",
@@ -6720,7 +6720,7 @@
    "intelligence": 45.1,
    "coding": null,
    "agentic": null,
-   "tps": 189.87
+   "tps": 169.04
   },
   {
    "name": "GLM-5 (Non-reasoning)",
@@ -6730,7 +6730,7 @@
    "intelligence": 21.8,
    "coding": null,
    "agentic": null,
-   "tps": 69.56
+   "tps": 72.33
   },
   {
    "name": "NVIDIA Nemotron Nano 9B V2 (Reasoning)",
@@ -6740,7 +6740,7 @@
    "intelligence": 7.4,
    "coding": null,
    "agentic": null,
-   "tps": 97.51
+   "tps": 199.36
   },
   {
    "name": "Claude Sonnet 4.6 (Non-reasoning, Low)",
@@ -6750,7 +6750,7 @@
    "intelligence": 23.3,
    "coding": null,
    "agentic": null,
-   "tps": 45.92
+   "tps": 50.97
   },
   {
    "name": "Claude 4.1 Opus (Non-reasoning)",
@@ -6770,7 +6770,7 @@
    "intelligence": 53.6,
    "coding": null,
    "agentic": null,
-   "tps": 81.39
+   "tps": 80.04
   },
   {
    "name": "Qwen3 30B A3B (Non-reasoning)",
@@ -6780,7 +6780,7 @@
    "intelligence": 6.6,
    "coding": null,
    "agentic": null,
-   "tps": 157.05
+   "tps": 125.17
   },
   {
    "name": "Qwen3.6 Plus",
@@ -6790,7 +6790,7 @@
    "intelligence": 27,
    "coding": 54.5,
    "agentic": null,
-   "tps": 55.75
+   "tps": 54.98
   },
   {
    "name": "Agnes 2.5 Pro Beta",
@@ -6800,7 +6800,7 @@
    "intelligence": 35.2,
    "coding": 62.3,
    "agentic": null,
-   "tps": 107.83
+   "tps": 110.75
   },
   {
    "name": "Nova 2.0 Pro Preview (Low)",
@@ -6810,7 +6810,7 @@
    "intelligence": 12.8,
    "coding": 25.9,
    "agentic": null,
-   "tps": 119.29
+   "tps": 123.5
   },
   {
    "name": "Gemini 2.5 Flash-Lite (Reasoning)",
@@ -6820,7 +6820,7 @@
    "intelligence": 8.5,
    "coding": null,
    "agentic": null,
-   "tps": 372.55
+   "tps": 367.66
   },
   {
    "name": "Qwen3 VL 4B Instruct",
@@ -6840,7 +6840,7 @@
    "intelligence": 12.7,
    "coding": 22.1,
    "agentic": 1.3,
-   "tps": 69.77
+   "tps": 102.59
   },
   {
    "name": "Gemini 3.8 Flash (Low)",
@@ -6870,7 +6870,7 @@
    "intelligence": 18.6,
    "coding": null,
    "agentic": null,
-   "tps": 103.87
+   "tps": 102.12
   },
   {
    "name": "Jamba Reasoning 3B",
@@ -6890,7 +6890,7 @@
    "intelligence": 33.7,
    "coding": 68.8,
    "agentic": 38.4,
-   "tps": 92.53
+   "tps": 99.96
   },
   {
    "name": "Kimi K3 (Max)",
@@ -6900,7 +6900,7 @@
    "intelligence": 43.6,
    "coding": 76.2,
    "agentic": 50,
-   "tps": 41.16
+   "tps": 52.67
   },
   {
    "name": "OLMo 2 7B",
@@ -6930,7 +6930,7 @@
    "intelligence": 26.7,
    "coding": 61.2,
    "agentic": 31.4,
-   "tps": 171.49
+   "tps": 165.51
   },
   {
    "name": "KAT-Coder-Pro V1",
@@ -6950,7 +6950,7 @@
    "intelligence": 13.7,
    "coding": null,
    "agentic": null,
-   "tps": 96.86
+   "tps": 98.74
   },
   {
    "name": "LFM2 24B A2B",
@@ -6970,7 +6970,7 @@
    "intelligence": 12.5,
    "coding": null,
    "agentic": null,
-   "tps": 179.72
+   "tps": 191.18
   },
   {
    "name": "KAT Coder Pro V2",
@@ -6990,7 +6990,7 @@
    "intelligence": 9.2,
    "coding": 36.2,
    "agentic": 0.9,
-   "tps": 91.37
+   "tps": 95.76
   },
   {
    "name": "GPT-5.1 Codex mini (High)",
@@ -7000,7 +7000,7 @@
    "intelligence": 20.4,
    "coding": null,
    "agentic": null,
-   "tps": 171.34
+   "tps": 172.65
   },
   {
    "name": "Gemini 2.0 Flash (experimental)",
@@ -7030,7 +7030,7 @@
    "intelligence": 24.3,
    "coding": null,
    "agentic": null,
-   "tps": 87.76
+   "tps": 83.12
   },
   {
    "name": "DeepSeek V4 Flash 0731 (Max)",
@@ -7040,7 +7040,7 @@
    "intelligence": 34.3,
    "coding": 69.1,
    "agentic": 41,
-   "tps": 149.47
+   "tps": 149.05
   },
   {
    "name": "Gemma 4 12B (Reasoning)",
@@ -7050,7 +7050,7 @@
    "intelligence": 14.2,
    "coding": 31,
    "agentic": null,
-   "tps": 116.65
+   "tps": 113.31
   },
   {
    "name": "Muse Wonder (Max)",
@@ -7060,7 +7060,7 @@
    "intelligence": 52.4,
    "coding": null,
    "agentic": null,
-   "tps": 154.32
+   "tps": 190.16
   },
   {
    "name": "Claude Opus 5 (Medium)",
@@ -7070,7 +7070,7 @@
    "intelligence": 44.8,
    "coding": 74.3,
    "agentic": 46.2,
-   "tps": 50.92
+   "tps": 51.02
   },
   {
    "name": "Grok 3 mini Reasoning (High)",
@@ -7080,7 +7080,7 @@
    "intelligence": 14.6,
    "coding": null,
    "agentic": null,
-   "tps": 66.46
+   "tps": 51.58
   },
   {
    "name": "Llama 2 Chat 7B",
