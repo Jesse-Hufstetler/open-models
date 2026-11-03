@@ -1,5 +1,5 @@
 {
- "fetched": "2026-11-02T16:07:54.744Z",
+ "fetched": "2026-11-03T14:26:01.836Z",
  "source": "Epoch AI (CC BY 4.0)",
  "eci": [
   {
@@ -1630,6 +1630,10 @@
   }
  ],
  "gpqa": [
+  {
+   "name": "mistral-large-4-0-oss_high",
+   "v": 90.15151515151516
+  },
   {
    "name": "gpt-6.1-terra_max",
    "v": 94.31818181818183
