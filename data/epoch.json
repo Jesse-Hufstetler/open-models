@@ -1,5 +1,5 @@
 {
- "fetched": "2026-11-03T14:26:01.836Z",
+ "fetched": "2026-11-04T14:40:05.982Z",
  "source": "Epoch AI (CC BY 4.0)",
  "eci": [
   {
@@ -1631,8 +1631,32 @@
  ],
  "gpqa": [
   {
+   "name": "doubao-seed-evolving_high",
+   "v": 93.11868686868688
+  },
+  {
    "name": "mistral-large-4-0-oss_high",
    "v": 90.15151515151516
+  },
+  {
+   "name": "seed-1.6",
+   "v": 77.58838383838383
+  },
+  {
+   "name": "doubao-seed-2.1-turbo-260628_high",
+   "v": 89.58333333333334
+  },
+  {
+   "name": "doubao-seed-2.0-lite-260428_high",
+   "v": 88.13131313131312
+  },
+  {
+   "name": "doubao-seed-2.0-pro-260215_high",
+   "v": 88.19444444444444
+  },
+  {
+   "name": "doubao-seed-2.1-pro-260628_high",
+   "v": 89.33080808080808
   },
   {
    "name": "gpt-6.1-terra_max",
