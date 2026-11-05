@@ -1,11 +1,10 @@
 [
  {
   "org": "Baichuan",
-  "count": 3,
+  "count": 2,
   "examples": [
    "Baichuan2-13B",
-   "Baichuan 2-7B",
-   "Baichuan1-7B"
+   "Baichuan 2-7B"
   ]
  },
  {
