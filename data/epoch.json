@@ -1,5 +1,5 @@
 {
- "fetched": "2026-11-10T14:58:50.528Z",
+ "fetched": "2026-11-11T14:29:45.851Z",
  "source": "Epoch AI (CC BY 4.0)",
  "eci": [
   {
@@ -1541,6 +1541,10 @@
   {
    "name": "kimi-k3.1-pro-together_max",
    "v": 94.1919191919192
+  },
+  {
+   "name": "gemini-4-carbon_high",
+   "v": 96.52777777777779
   },
   {
    "name": "doubao-seed-evolving_high",
