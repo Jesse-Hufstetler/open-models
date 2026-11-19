@@ -1,5 +1,5 @@
 {
- "fetched": "2026-11-18T15:45:34.097Z",
+ "fetched": "2026-11-19T15:51:39.265Z",
  "source": "Epoch AI (CC BY 4.0)",
  "eci": [
   {
@@ -1546,6 +1546,10 @@
   }
  ],
  "gpqa": [
+  {
+   "name": "gemini-4-hydrogen_xhigh",
+   "v": 96.78030303030303
+  },
   {
    "name": "claude-fable-5-2_max",
    "v": 93.87626262626263
