@@ -1,5 +1,5 @@
 {
- "fetched": "2026-11-22T14:40:34.261Z",
+ "fetched": "2026-11-23T18:21:46.970Z",
  "source": "Epoch AI (CC BY 4.0)",
  "eci": [
   {
@@ -1552,6 +1552,10 @@
   }
  ],
  "gpqa": [
+  {
+   "name": "qwen4-max_xhigh",
+   "v": 94.00252525252525
+  },
   {
    "name": "gemini-4-neon_xhigh",
    "v": 96.27525252525253
