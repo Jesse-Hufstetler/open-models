@@ -1,5 +1,5 @@
 {
- "fetched": "2026-11-25T17:20:18.457Z",
+ "fetched": "2026-11-26T16:59:55.818Z",
  "source": "Epoch AI (CC BY 4.0)",
  "eci": [
   {
@@ -1552,6 +1552,10 @@
   }
  ],
  "gpqa": [
+  {
+   "name": "inkling-2-mini_xhigh",
+   "v": 86.80555555555556
+  },
   {
    "name": "qwen4-max_xhigh",
    "v": 94.00252525252525
